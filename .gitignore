@@ -1,0 +1,65 @@
+# Build results
+bin/
+obj/
+out/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code settings
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# ASP.NET Secrets
+secrets.json
+
+# Logs
+*.log
+
+# Rider IDE
+.idea/
+
+# Auto-generated files
+Generated/
+**/Generated/
+
+# dotnet tools
+/.tools/
+
+# .NET Core specific
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+*.nuspec
+*.psmdcp
+
+# Entity Framework Migrations snapshot
+*Migrations/*Designer.cs
+*Migrations/*Snapshot.cs
+
+# Optional: test results
+TestResults/
+
+# Publish directory
+publish/
+*.publish.xml
+
+# Others
+*.vspscc
+*.vssscc
+
+# Visual Studio
+.vs/
+
