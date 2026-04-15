@@ -1,4 +1,5 @@
 ﻿using Inventario.Application.Commands.Usuarios.Create;
+using Inventario.Application.Queries.Usuarios.GetList;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventario.API.Controllers
@@ -12,6 +13,17 @@ namespace Inventario.API.Controllers
             // si tienes configurado el ValidationBehavior en MediatR.
             var result = await Mediator.Send(command, cancellationToken);
 
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IReadOnlyList<UsuarioDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        {
+            // Enviamos el Query al Mediator
+            var result = await Mediator.Send(new GetUsuariosQuery(), cancellationToken);
+
+            // Retornamos la lista mapeada a UsuarioDto
             return Ok(result);
         }
     }

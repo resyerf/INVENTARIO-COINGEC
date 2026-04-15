@@ -20,6 +20,8 @@ namespace Inventario.Infrastructure.Persistence.Context
         public DbSet<Mantenimiento> Mantenimientos => Set<Mantenimiento>();
         public DbSet<Ubicacion> Ubicaciones => Set<Ubicacion>();
 
+        public DbSet<SubCategoria> SubCategorias => Set<SubCategoria>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(InventarioDbContext).Assembly);

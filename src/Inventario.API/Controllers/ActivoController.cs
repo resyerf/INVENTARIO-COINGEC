@@ -1,4 +1,5 @@
 ﻿using Inventario.Application.Commands.Activos.Create;
+using Inventario.Application.Queries.Activos.Reportes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventario.API.Controllers
@@ -15,6 +16,11 @@ namespace Inventario.API.Controllers
             return Ok(result);
         }
 
-        // Aquí irían los otros endpoints (GetList, GetById, etc.)
+        [HttpGet("reporte")]
+        public async Task<IActionResult> GetReporte(CancellationToken ct)
+        {
+            var result = await Mediator.Send(new GetActivosReporteQuery(), ct);
+            return Ok(result);
+        }
     }
 }

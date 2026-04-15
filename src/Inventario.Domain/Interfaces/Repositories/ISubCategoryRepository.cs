@@ -5,5 +5,6 @@ namespace Inventario.Domain.Interfaces.Repositories
 {
     public interface ISubCategoryRepository : IRepository<SubCategoria>
     {
+        Task<IReadOnlyList<SubCategoria>> GetByCategoriaAndTermAsync(string termino, CancellationToken cancellationToken);
     }
 }

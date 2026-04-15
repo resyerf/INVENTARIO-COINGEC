@@ -1,6 +1,7 @@
 ﻿using Inventario.Domain.Entities;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Infrastructure.Persistence.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Inventario.Infrastructure.Persistence.Repositories
 {
@@ -9,6 +10,16 @@ namespace Inventario.Infrastructure.Persistence.Repositories
         public SubCategoryRepository(InventarioDbContext dbContext) : base(dbContext)
         {
 
+        }
+
+        public async Task<IReadOnlyList<SubCategoria>> GetByCategoriaAndTermAsync(string termino, CancellationToken cancellationToken)
+        {
+            return await DbContext.SubCategorias
+                .AsNoTracking()
+                .Include(s => s.Categoria)
+                .Where(c => c.Nombre.ToLower().StartsWith(termino.ToLower()))
+                .Take(10)
+                .ToListAsync(cancellationToken);
         }
     }
 }

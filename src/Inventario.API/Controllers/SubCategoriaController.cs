@@ -1,4 +1,6 @@
 ﻿using Inventario.Application.Commands.SubCategorias;
+using Inventario.Application.DTOs;
+using Inventario.Application.Queries.SubCategorias.Search;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventario.API.Controllers
@@ -15,5 +17,12 @@ namespace Inventario.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(IReadOnlyList<CategoriaDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Search([FromQuery] string termino, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new SearchSubCategoriasQuery(termino), cancellationToken);
+            return Ok(result);
+        }
     }
 }

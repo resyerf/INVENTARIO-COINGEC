@@ -12,5 +12,6 @@ namespace Inventario.Application.Data
         DbSet<Asignacion> Asignaciones { get; }
         DbSet<Mantenimiento> Mantenimientos { get; }
         DbSet<Ubicacion> Ubicaciones { get; }
+        DbSet<SubCategoria> SubCategorias { get; }
     }
 }

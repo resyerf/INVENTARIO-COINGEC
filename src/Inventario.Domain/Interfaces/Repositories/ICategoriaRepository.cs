@@ -7,5 +7,6 @@ namespace Inventario.Domain.Interfaces.Repositories
     {
         // Buscar por el código de categoría (Ej: HERM)
         Task<Categoria?> GetByCodeAsync(string code, CancellationToken cancellationToken = default);
+        Task<IReadOnlyList<Categoria>> SearchByTermAsync(string termino, CancellationToken cancellationToken);
     }
 }

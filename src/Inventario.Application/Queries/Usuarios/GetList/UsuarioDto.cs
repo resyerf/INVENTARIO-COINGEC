@@ -3,6 +3,7 @@
     public record UsuarioDto(
     Guid Id,
     string NombreCompleto,
+    string Email,
     string Area,
     string Cargo);
 }

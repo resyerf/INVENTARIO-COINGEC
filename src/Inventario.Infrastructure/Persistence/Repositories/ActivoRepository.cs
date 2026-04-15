@@ -57,5 +57,15 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                     .ThenInclude(s => s.Categoria)
                 .ToListAsync(cancellationToken);
         }
+        public async Task<IReadOnlyList<Activo>> GetAllForReportAsync(CancellationToken ct)
+        {
+            return await DbContext.Activos
+                .AsNoTracking()
+                .Include(a => a.SubCategoria)
+                    .ThenInclude(s => s.Categoria)
+                .Include(a => a.Usuario)
+                .Include(a => a.Ubicacion)
+                .ToListAsync(ct);
+        }
     }
 }

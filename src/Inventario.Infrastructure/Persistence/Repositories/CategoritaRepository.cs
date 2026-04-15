@@ -17,5 +17,13 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                 .Include(c => c.Ubicacion) // Opcional: solo si necesitas saber si es SOTANO/TALLER
                 .FirstOrDefaultAsync(c => c.Codigo == code.ToUpper().Trim(), cancellationToken);
         }
+        public async Task<IReadOnlyList<Categoria>> SearchByTermAsync(string termino, CancellationToken cancellationToken)
+        {
+            return await DbContext.Categorias
+                .AsNoTracking()
+                .Where(c => c.Descripcion.ToLower().StartsWith(termino.ToLower()))
+                .Take(10)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

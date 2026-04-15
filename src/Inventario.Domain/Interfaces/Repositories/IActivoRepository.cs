@@ -14,4 +14,6 @@ public interface IActivoRepository : IRepository<Activo>
 
     // Obtener todos los activos que un usuario tiene actualmente en su poder
     Task<List<Activo>> GetActivosAsignadosAUsuarioAsync(Guid usuarioId, CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<Activo>> GetAllForReportAsync(CancellationToken ct);
 }

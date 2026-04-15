@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Inventario.Application.DTOs;
+using MediatR;
 
 namespace Inventario.Application.Queries.Categorias.GetList
 {

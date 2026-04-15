@@ -1,4 +1,7 @@
 ﻿using Inventario.Application.Commands.Categorias.Create;
+using Inventario.Application.DTOs;
+using Inventario.Application.Queries.Categorias.GetList;
+using Inventario.Application.Queries.Categorias.Search;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventario.API.Controllers
@@ -15,6 +18,23 @@ namespace Inventario.API.Controllers
             return Ok(result);
         }
 
-        // Aquí irían los otros endpoints (GetList, GetById, etc.)
+        [HttpGet]
+        [ProducesResponseType(typeof(IReadOnlyList<CategoriaDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        {
+            // Enviamos el Query al Mediator
+            var result = await Mediator.Send(new GetCategoriasQuery(), cancellationToken);
+
+            // Retornamos la lista mapeada a CategoriaDto
+            return Ok(result);
+        }
+
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(IReadOnlyList<CategoriaDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Search([FromQuery] string termino, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new SearchCategoriasQuery(termino), cancellationToken);
+            return Ok(result);
+        }
     }
 }
