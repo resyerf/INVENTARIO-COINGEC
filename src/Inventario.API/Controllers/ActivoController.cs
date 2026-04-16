@@ -1,5 +1,7 @@
-﻿using Inventario.Application.Commands.Activos.Create;
+using Inventario.Application.Commands.Activos.Create;
 using Inventario.Application.Queries.Activos.Reportes;
+using Inventario.Application.Queries.Activos.GetList;
+using Inventario.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventario.API.Controllers
@@ -13,6 +15,14 @@ namespace Inventario.API.Controllers
             // si tienes configurado el ValidationBehavior en MediatR.
             var result = await Mediator.Send(command, cancellationToken);
 
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(IReadOnlyList<ActivoDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll(CancellationToken ct)
+        {
+            var result = await Mediator.Send(new GetActivosQuery(), ct);
             return Ok(result);
         }
 

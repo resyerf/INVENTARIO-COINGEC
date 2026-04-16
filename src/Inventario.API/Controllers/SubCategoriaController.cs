@@ -1,5 +1,6 @@
-﻿using Inventario.Application.Commands.SubCategorias;
+using Inventario.Application.Commands.SubCategorias;
 using Inventario.Application.DTOs;
+using Inventario.Application.Queries.SubCategorias.GetList;
 using Inventario.Application.Queries.SubCategorias.Search;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,14 @@ namespace Inventario.API.Controllers
 {
     public sealed class SubCategoriaController : BaseApiController
     {
+        [HttpGet]
+        [ProducesResponseType(typeof(IReadOnlyList<SubCategoriaDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new GetSubCategoriasQuery(), cancellationToken);
+            return Ok(result);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateSubCategoriaCommand command, CancellationToken cancellationToken)
         {
