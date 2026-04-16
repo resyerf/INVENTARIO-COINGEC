@@ -25,5 +25,13 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                 .Take(10)
                 .ToListAsync(cancellationToken);
         }
+
+        public override async Task<List<Categoria>> GetAllAsync(CancellationToken cancellationToken)
+        {
+            return await DbContext.Categorias
+                .AsNoTracking()
+                .Include(c => c.Ubicacion)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

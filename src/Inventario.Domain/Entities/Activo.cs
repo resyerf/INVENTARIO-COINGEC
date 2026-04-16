@@ -59,7 +59,9 @@ namespace Inventario.Domain.Entities
                 Serie = serie,
                 Etiquetado = etiquetado,
                 UbicacionId = ubicacionId,
-                FechaAdquisicion = fechaAdquisicion,
+                FechaAdquisicion = fechaAdquisicion.HasValue
+                ? DateTime.SpecifyKind(fechaAdquisicion.Value, DateTimeKind.Utc)
+                : null,
                 Estado = "Bien"
             };
         }

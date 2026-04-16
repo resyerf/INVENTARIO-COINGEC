@@ -12,7 +12,10 @@ builder.Services
 
 var app = builder.Build();
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Inventario API v1.0.0");
+});
 app.UseCors("AllowAngularApp");
 app.MapControllers();
 app.ApplyMigrations();
