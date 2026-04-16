@@ -1,6 +1,7 @@
 using Inventario.Application.Commands.Activos.Create;
 using Inventario.Application.Queries.Activos.Reportes;
 using Inventario.Application.Queries.Activos.GetList;
+using Inventario.Application.Queries.Activos.Search;
 using Inventario.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,14 @@ namespace Inventario.API.Controllers
         public async Task<IActionResult> GetReporte(CancellationToken ct)
         {
             var result = await Mediator.Send(new GetActivosReporteQuery(), ct);
+            return Ok(result);
+        }
+
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(IReadOnlyList<ActivoDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Search([FromQuery] string termino, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new SearchActivosQuery(termino), cancellationToken);
             return Ok(result);
         }
     }

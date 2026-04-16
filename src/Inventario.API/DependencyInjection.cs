@@ -15,7 +15,7 @@ namespace Inventario.API
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Inventario API",
-                    Version = "1.0.1",
+                    Version = "1.0.2",
                     Description = "API de inventario",
                 });
             });

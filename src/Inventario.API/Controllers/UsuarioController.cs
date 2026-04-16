@@ -1,5 +1,6 @@
 ﻿using Inventario.Application.Commands.Usuarios.Create;
 using Inventario.Application.Queries.Usuarios.GetList;
+using Inventario.Application.Queries.Usuarios.Search;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Inventario.API.Controllers
@@ -24,6 +25,14 @@ namespace Inventario.API.Controllers
             var result = await Mediator.Send(new GetUsuariosQuery(), cancellationToken);
 
             // Retornamos la lista mapeada a UsuarioDto
+            return Ok(result);
+        }
+
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(IReadOnlyList<UsuarioDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Search([FromQuery] string termino, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(new SearchUsuariosQuery(termino), cancellationToken);
             return Ok(result);
         }
     }
