@@ -1,4 +1,4 @@
-﻿using Microsoft.OpenApi;
+using Microsoft.OpenApi;
 
 namespace Inventario.API
 {
@@ -15,7 +15,7 @@ namespace Inventario.API
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Inventario API",
-                    Version = "1.0.0",
+                    Version = "1.0.1",
                     Description = "API de inventario",
                 });
             });
@@ -25,7 +25,7 @@ namespace Inventario.API
                 options.AddPolicy(AngularCorsPolicy, builder =>
                 {
                     builder
-                        .WithOrigins("http://localhost:4200", "https://inventario-api.resyerf.com", "https://inventario-coingec.resyerf.com/")
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
