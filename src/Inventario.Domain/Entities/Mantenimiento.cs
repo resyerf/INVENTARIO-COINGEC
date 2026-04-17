@@ -15,6 +15,9 @@ namespace Inventario.Domain.Entities
         public Guid ActivoId { get; private set; }
         public Activo Activo { get; private set; } = null!;
 
+        // Borrado lógico
+        public bool IsActive { get; private set; } = true;
+
         // Constructor para EF Core
         private Mantenimiento() { }
 
@@ -53,6 +56,23 @@ namespace Inventario.Domain.Entities
             FechaCalibracion = fechaCalibracion;
             Resultado = resultado;
             Costo = costo;
+            IsActive = true;
+        }
+
+        /// <summary>
+        /// Desactiva el mantenimiento de forma lógica (borrado lógico)
+        /// </summary>
+        public void Deactivate()
+        {
+            IsActive = false;
+        }
+
+        /// <summary>
+        /// Reactiva el mantenimiento si fue desactivado
+        /// </summary>
+        public void Activate()
+        {
+            IsActive = true;
         }
     }
 }

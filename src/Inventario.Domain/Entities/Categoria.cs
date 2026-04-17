@@ -11,6 +11,9 @@ namespace Inventario.Domain.Entities
         public Guid UbicacionId { get; private set; }
         public Ubicacion Ubicacion { get; private set; } = null!;
 
+        // Borrado lógico
+        public bool IsActive { get; private set; } = true;
+
         private Categoria() { }
 
         private Categoria(Guid id, string codigo, string descripcion, Guid ubicacionId)
@@ -19,11 +22,28 @@ namespace Inventario.Domain.Entities
             Codigo = codigo;
             Descripcion = descripcion;
             UbicacionId = ubicacionId;
+            IsActive = true;
         }
 
         public static Categoria Create(string codigo, string descripcion, Guid ubicacionId)
         {
             return new Categoria(Guid.NewGuid(), codigo.Trim().ToUpper(), descripcion, ubicacionId);
+        }
+
+        /// <summary>
+        /// Desactiva la categoría de forma lógica (borrado lógico)
+        /// </summary>
+        public void Deactivate()
+        {
+            IsActive = false;
+        }
+
+        /// <summary>
+        /// Reactiva la categoría si fue desactivada
+        /// </summary>
+        public void Activate()
+        {
+            IsActive = true;
         }
     }
 }

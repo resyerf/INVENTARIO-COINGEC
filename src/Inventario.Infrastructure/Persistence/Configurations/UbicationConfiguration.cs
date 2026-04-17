@@ -13,6 +13,10 @@ namespace Inventario.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Id).HasColumnName("location_id");
             builder.Property(x => x.Nombre).HasColumnName("name").HasMaxLength(100).IsRequired();
 
+            builder.Property(x => x.IsActive)
+                .HasColumnName("is_active")
+                .HasDefaultValue(true);
+
             builder.HasIndex(x => x.Nombre).IsUnique();
         }
     }

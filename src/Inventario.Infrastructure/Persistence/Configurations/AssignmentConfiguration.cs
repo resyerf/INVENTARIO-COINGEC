@@ -32,6 +32,10 @@ public class AssignmentConfiguration : IEntityTypeConfiguration<Asignacion>
             .HasColumnName("remarks")
             .HasMaxLength(500);
 
+        builder.Property(x => x.IsActive)
+            .HasColumnName("is_active")
+            .HasDefaultValue(true);
+
         // --- RELACIONES CORREGIDAS ---
 
         // Relación con Activo

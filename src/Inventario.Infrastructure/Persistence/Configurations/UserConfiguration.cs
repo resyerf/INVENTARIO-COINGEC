@@ -41,7 +41,7 @@ namespace Inventario.Infrastructure.Persistence.Configurations
                 .HasColumnName("office_location")
                 .HasMaxLength(100);
 
-            builder.Property(u => u.EstaActivo)
+            builder.Property(u => u.IsActive)
                 .HasColumnName("is_active")
                 .HasDefaultValue(true);
 

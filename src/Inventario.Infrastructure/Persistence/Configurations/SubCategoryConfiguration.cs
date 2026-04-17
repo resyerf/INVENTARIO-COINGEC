@@ -16,6 +16,10 @@ namespace Inventario.Infrastructure.Persistence.Configurations
                 .HasMaxLength(200)
                 .IsRequired();
 
+            builder.Property(x => x.IsActive)
+                .HasColumnName("is_active")
+                .HasDefaultValue(true);
+
             builder.HasOne(x => x.Categoria)
                 .WithMany() // Una categoría tiene muchos subtipos
                 .HasForeignKey(x => x.CategoriaId)

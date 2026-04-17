@@ -45,5 +45,9 @@ public class MaintenanceConfiguration : IEntityTypeConfiguration<Mantenimiento>
         builder.Property(x => x.Costo)
             .HasColumnName("cost")
             .HasPrecision(18, 2);
+
+        builder.Property(x => x.IsActive)
+            .HasColumnName("is_active")
+            .HasDefaultValue(true);
     }
 }

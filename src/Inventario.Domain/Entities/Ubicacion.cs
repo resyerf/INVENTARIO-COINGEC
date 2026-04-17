@@ -7,6 +7,9 @@ namespace Inventario.Domain.Entities
         public string Nombre { get; private set; } = string.Empty;
         public string? Descripcion { get; private set; }
 
+        // Borrado lógico
+        public bool IsActive { get; private set; } = true;
+
         private Ubicacion() { }
 
         public static Ubicacion Create(string nombre, string? descripcion = null)
@@ -15,8 +18,25 @@ namespace Inventario.Domain.Entities
             {
                 Id = Guid.NewGuid(),
                 Nombre = nombre.ToUpper().Trim(),
-                Descripcion = descripcion
+                Descripcion = descripcion,
+                IsActive = true
             };
+        }
+
+        /// <summary>
+        /// Desactiva la ubicación de forma lógica (borrado lógico)
+        /// </summary>
+        public void Deactivate()
+        {
+            IsActive = false;
+        }
+
+        /// <summary>
+        /// Reactiva la ubicación si fue desactivada
+        /// </summary>
+        public void Activate()
+        {
+            IsActive = true;
         }
     }
 }

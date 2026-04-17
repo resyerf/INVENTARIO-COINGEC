@@ -18,6 +18,9 @@ namespace Inventario.Domain.Entities
         // Fechas opcionales
         public DateTime? FechaAdquisicion { get; private set; }
 
+        // Borrado lógico
+        public bool IsActive { get; private set; } = true;
+
         // Relaciones
         public Guid SubCategoriaId { get; private set; }
         public SubCategoria SubCategoria { get; private set; } = null!;
@@ -62,7 +65,8 @@ namespace Inventario.Domain.Entities
                 FechaAdquisicion = fechaAdquisicion.HasValue
                 ? DateTime.SpecifyKind(fechaAdquisicion.Value, DateTimeKind.Utc)
                 : null,
-                Estado = "Bien"
+                Estado = "Bien",
+                IsActive = true
             };
         }
 
@@ -75,6 +79,22 @@ namespace Inventario.Domain.Entities
         public void LiberarCustodio()
         {
             this.UsuarioId = null; // El equipo ya no tiene dueño, vuelve a estar en almacén/disponible
+        }
+
+        /// <summary>
+        /// Desactiva el activo de forma lógica (borrado lógico)
+        /// </summary>
+        public void Deactivate()
+        {
+            IsActive = false;
+        }
+
+        /// <summary>
+        /// Reactiva el activo si fue desactivado
+        /// </summary>
+        public void Activate()
+        {
+            IsActive = true;
         }
     }
 }

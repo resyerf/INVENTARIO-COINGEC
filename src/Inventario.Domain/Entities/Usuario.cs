@@ -10,7 +10,9 @@ namespace Inventario.Domain.Entities
         public string Area { get; private set; } = string.Empty;
         public string? Cargo { get; private set; }
         public string? Sede { get; private set; }
-        public bool EstaActivo { get; private set; }
+        
+        // Borrado lógico
+        public bool IsActive { get; private set; } = true;
 
         public ICollection<Activo> ActivosAsignados { get; private set; } = new List<Activo>();
 
@@ -33,7 +35,7 @@ namespace Inventario.Domain.Entities
             Area = area;
             Cargo = cargo;
             Sede = sede;
-            EstaActivo = true;
+            IsActive = true;
         }
 
         // --- STATIC FACTORY METHOD ---
@@ -65,12 +67,23 @@ namespace Inventario.Domain.Entities
             return usuario;
         }
 
-        public void Desactivar()
+        /// <summary>
+        /// Desactiva el usuario de forma lógica (borrado lógico)
+        /// </summary>
+        public void Deactivate()
         {
             if (ActivosAsignados.Any(a => a.Estado == "Asignado"))
                 throw new InvalidOperationException("No se puede desactivar un usuario con activos.");
 
-            EstaActivo = false;
+            IsActive = false;
+        }
+
+        /// <summary>
+        /// Reactiva el usuario si fue desactivado
+        /// </summary>
+        public void Activate()
+        {
+            IsActive = true;
         }
     }
 }

@@ -10,6 +10,9 @@ namespace Inventario.Domain.Entities
         public Guid CategoriaId { get; private set; }
         public Categoria Categoria { get; private set; } = null!;
 
+        // Borrado lógico
+        public bool IsActive { get; private set; } = true;
+
         private SubCategoria() { }
 
         public static SubCategoria Create(string nombre, Guid categoriaId)
@@ -18,8 +21,25 @@ namespace Inventario.Domain.Entities
             {
                 Id = Guid.NewGuid(),
                 Nombre = nombre,
-                CategoriaId = categoriaId
+                CategoriaId = categoriaId,
+                IsActive = true
             };
+        }
+
+        /// <summary>
+        /// Desactiva la subcategoría de forma lógica (borrado lógico)
+        /// </summary>
+        public void Deactivate()
+        {
+            IsActive = false;
+        }
+
+        /// <summary>
+        /// Reactiva la subcategoría si fue desactivada
+        /// </summary>
+        public void Activate()
+        {
+            IsActive = true;
         }
     }
 }

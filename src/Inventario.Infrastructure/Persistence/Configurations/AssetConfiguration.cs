@@ -60,6 +60,10 @@ namespace Inventario.Infrastructure.Persistence.Configurations
                 .HasColumnName("acquisition_date")
                 .IsRequired(false);
 
+            builder.Property(x => x.IsActive)
+                .HasColumnName("is_active")
+                .HasDefaultValue(true);
+
             // Relaciones
             builder.HasOne(x => x.SubCategoria)
                 .WithMany()

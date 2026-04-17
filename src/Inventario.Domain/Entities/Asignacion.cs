@@ -20,6 +20,9 @@ namespace Inventario.Domain.Entities
         public string? EstadoRecibido { get; private set; }
         public string? Observaciones { get; private set; }
 
+        // Borrado lógico
+        public bool IsActive { get; private set; } = true;
+
         // Constructor privado para forzar el uso de Create
         private Asignacion() { }
 
@@ -29,6 +32,7 @@ namespace Inventario.Domain.Entities
             UsuarioId = usuarioId;
             FechaAsignacion = DateTime.UtcNow;
             EstadoEntrega = estadoEntrega;
+            IsActive = true;
         }
 
         // Factory Method: Este es el que usarás en el Activo.RegistrarNuevaAsignacion
@@ -43,6 +47,22 @@ namespace Inventario.Domain.Entities
             FechaDevolucion = DateTime.UtcNow;
             EstadoRecibido = estadoRecibido;
             Observaciones = observaciones;
+        }
+
+        /// <summary>
+        /// Desactiva la asignación de forma lógica (borrado lógico)
+        /// </summary>
+        public void Deactivate()
+        {
+            IsActive = false;
+        }
+
+        /// <summary>
+        /// Reactiva la asignación si fue desactivada
+        /// </summary>
+        public void Activate()
+        {
+            IsActive = true;
         }
     }
 }
