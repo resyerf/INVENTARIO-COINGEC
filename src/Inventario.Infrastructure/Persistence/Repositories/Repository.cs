@@ -25,6 +25,11 @@ namespace Inventario.Infrastructure.Persistence.Repositories
             return await DbContext.Set<T>().ToListAsync(cancellationToken);
         }
 
+        public virtual async Task<int> CountAsync(CancellationToken cancellationToken = default)
+        {
+            return await DbContext.Set<T>().CountAsync(cancellationToken);
+        }
+
         public void Add(T entity) => DbContext.Set<T>().Add(entity);
 
         public void Update(T entity) => DbContext.Set<T>().Update(entity);

@@ -20,5 +20,15 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                 .Include(a => a.Usuario)
                 .ToListAsync(cancellationToken);
         }
+
+        /// <summary>
+        /// Obtiene el conteo de asignaciones activas (donde FechaDevolucion es null)
+        /// </summary>
+        public async Task<int> CountActivosAsignadosAsync(CancellationToken cancellationToken = default)
+        {
+            return await DbContext.Asignaciones
+                .Where(a => a.FechaDevolucion == null)
+                .CountAsync(cancellationToken);
+        }
     }
 }
