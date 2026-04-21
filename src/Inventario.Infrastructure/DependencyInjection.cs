@@ -1,4 +1,4 @@
-﻿using Inventario.Application.Data;
+using Inventario.Application.Data;
 using Inventario.Domain.Primitives;
 using Inventario.Infrastructure.Persistence.Context;
 using Inventario.Infrastructure.Persistence.Repositories;
@@ -12,7 +12,9 @@ namespace Inventario.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddPersistence(configuration).AddRepositories();
+            services.AddPersistence(configuration)
+                    .AddRepositories()
+                    .AddServices();
             return services;
         }
 
@@ -44,6 +46,12 @@ namespace Inventario.Infrastructure
                 }
             }
 
+            return services;
+        }
+
+        public static IServiceCollection AddServices(this IServiceCollection services)
+        {
+            services.AddTransient<Inventario.Application.Interfaces.Services.IExcelExportService, Inventario.Infrastructure.Services.ExcelExportService>();
             return services;
         }
     }

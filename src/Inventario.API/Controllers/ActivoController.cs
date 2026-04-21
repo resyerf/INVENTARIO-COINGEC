@@ -4,6 +4,7 @@ using Inventario.Application.Queries.Activos.GetList;
 using Inventario.Application.Queries.Activos.Search;
 using Inventario.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Inventario.Application.Queries.Activos.Export;
 
 namespace Inventario.API.Controllers
 {
@@ -40,6 +41,18 @@ namespace Inventario.API.Controllers
         {
             var result = await Mediator.Send(new SearchActivosQuery(termino), cancellationToken);
             return Ok(result);
+        }
+
+        [HttpGet("export")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ExportToExcel(CancellationToken ct)
+        {
+            var resultBytes = await Mediator.Send(new ExportActivosQuery(), ct);
+
+            string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            string fileName = $"Activos_{DateTime.Now:yyyyMMdd}.xlsx";
+
+            return File(resultBytes, contentType, fileName);
         }
     }
 }
