@@ -1,4 +1,4 @@
-﻿using Inventario.Application.DTOs;
+using Inventario.Application.DTOs;
 using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
 
@@ -26,7 +26,8 @@ namespace Inventario.Application.Queries.Categorias.Search
                 c.Codigo,
                 c.Descripcion,
                 c.Ubicacion.Nombre,
-                c.Ubicacion.Descripcion ?? "Sin descripcion"
+                c.Ubicacion.Descripcion ?? "Sin descripcion",
+                c.IsActive
             )).ToList().AsReadOnly();
         }
     }

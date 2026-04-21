@@ -13,6 +13,7 @@ namespace Inventario.Application.DTOs
         string? Observaciones,
         string SubCategoria,
         string? Custodio,
-        string? Ubicacion,
-        DateTime? FechaAdquisicion);
+        string Ubicacion,
+        DateTime? FechaAdquisicion,
+        bool IsActive);
 }

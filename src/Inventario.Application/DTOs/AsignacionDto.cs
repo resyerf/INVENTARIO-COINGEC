@@ -9,6 +9,7 @@ namespace Inventario.Application.DTOs
         DateTime? FechaDevolucion,
         string EstadoEntrega,
         string? EstadoRecibido,
-        string? Observaciones
+        string? Observaciones,
+        bool IsActive
     );
 }

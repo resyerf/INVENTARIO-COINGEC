@@ -1,4 +1,5 @@
 using Inventario.Application.Commands.Activos.Create;
+using Inventario.Application.Commands.Activos.Delete;
 using Inventario.Application.Queries.Activos.Reportes;
 using Inventario.Application.Queries.Activos.GetList;
 using Inventario.Application.Queries.Activos.Search;
@@ -53,6 +54,13 @@ namespace Inventario.API.Controllers
             string fileName = $"Activos_{DateTime.Now:yyyyMMdd}.xlsx";
 
             return File(resultBytes, contentType, fileName);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            await Mediator.Send(new DeleteActivoCommand(id), cancellationToken);
+            return NoContent();
         }
     }
 }

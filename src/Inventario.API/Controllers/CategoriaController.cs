@@ -1,4 +1,5 @@
-﻿using Inventario.Application.Commands.Categorias.Create;
+using Inventario.Application.Commands.Categorias.Create;
+using Inventario.Application.Commands.Categorias.Delete;
 using Inventario.Application.DTOs;
 using Inventario.Application.Queries.Categorias.GetList;
 using Inventario.Application.Queries.Categorias.Search;
@@ -35,6 +36,12 @@ namespace Inventario.API.Controllers
         {
             var result = await Mediator.Send(new SearchCategoriasQuery(termino), cancellationToken);
             return Ok(result);
+        }
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            await Mediator.Send(new DeleteCategoriaCommand(id), cancellationToken);
+            return NoContent();
         }
     }
 }

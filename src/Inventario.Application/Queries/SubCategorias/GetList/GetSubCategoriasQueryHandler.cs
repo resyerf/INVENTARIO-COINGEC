@@ -21,7 +21,8 @@ namespace Inventario.Application.Queries.SubCategorias.GetList
                 s.Id,
                 s.Nombre,
                 s.Categoria?.Codigo ?? "N/A",
-                s.Categoria?.Descripcion ?? "Sin Descripcion"
+                s.Categoria?.Descripcion ?? "Sin Descripcion",
+                s.IsActive
             )).ToList().AsReadOnly();
         }
     }

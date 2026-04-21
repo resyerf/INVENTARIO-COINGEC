@@ -1,5 +1,6 @@
 using Inventario.API.Models.Requests;
 using Inventario.Application.Commands.Asignaciones.Asignar;
+using Inventario.Application.Commands.Asignaciones.Delete;
 using Inventario.Application.Commands.Asignaciones.FinalizarAsignacion;
 using Inventario.Application.Queries.Asignaciones.GetList;
 using Inventario.Application.DTOs;
@@ -37,6 +38,12 @@ namespace Inventario.API.Controllers
             );
 
             await Mediator.Send(command, cancellationToken);
+            return NoContent();
+        }
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            await Mediator.Send(new DeleteAsignacionCommand(id), cancellationToken);
             return NoContent();
         }
     }

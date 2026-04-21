@@ -1,4 +1,5 @@
-﻿using Inventario.Application.Commands.Usuarios.Create;
+using Inventario.Application.Commands.Usuarios.Create;
+using Inventario.Application.Commands.Usuarios.Delete;
 using Inventario.Application.Queries.Usuarios.GetList;
 using Inventario.Application.Queries.Usuarios.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,12 @@ namespace Inventario.API.Controllers
         {
             var result = await Mediator.Send(new SearchUsuariosQuery(termino), cancellationToken);
             return Ok(result);
+        }
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            await Mediator.Send(new DeleteUsuarioCommand(id), cancellationToken);
+            return NoContent();
         }
     }
 }

@@ -1,4 +1,4 @@
 namespace Inventario.Application.DTOs
 {
-    public record UbicacionDto(Guid Id, string Nombre);
+    public record UbicacionDto(Guid Id, string Nombre, bool IsActive);
 }

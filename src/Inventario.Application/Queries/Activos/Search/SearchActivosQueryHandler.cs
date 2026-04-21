@@ -36,7 +36,8 @@ namespace Inventario.Application.Queries.Activos.Search
                     a.SubCategoria?.Nombre ?? "",
                     a.Usuario?.NombreCompleto ?? "",
                     a.Ubicacion?.Nombre ?? "",
-                    a.FechaAdquisicion))
+                    a.FechaAdquisicion,
+                    a.IsActive))
                 .ToList()
                 .AsReadOnly();
 

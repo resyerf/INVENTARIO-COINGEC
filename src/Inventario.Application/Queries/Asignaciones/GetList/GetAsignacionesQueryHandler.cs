@@ -26,7 +26,8 @@ namespace Inventario.Application.Queries.Asignaciones.GetList
                 a.FechaDevolucion,
                 a.EstadoEntrega,
                 a.EstadoRecibido,
-                a.Observaciones
+                a.Observaciones,
+                a.IsActive
             )).ToList().AsReadOnly();
         }
     }

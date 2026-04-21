@@ -1,9 +1,10 @@
-﻿namespace Inventario.Application.Queries.Usuarios.GetList
+namespace Inventario.Application.Queries.Usuarios.GetList
 {
     public record UsuarioDto(
     Guid Id,
     string NombreCompleto,
     string Email,
     string Area,
-    string Cargo);
+    string Cargo,
+    bool IsActive);
 }

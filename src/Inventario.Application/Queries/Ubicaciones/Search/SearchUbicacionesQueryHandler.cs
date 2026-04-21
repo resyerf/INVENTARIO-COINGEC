@@ -21,7 +21,7 @@ namespace Inventario.Application.Queries.Ubicaciones.Search
             var filtered = ubicaciones
                 .Where(u => string.IsNullOrWhiteSpace(request.Termino) || 
                            u.Nombre.Contains(request.Termino, StringComparison.OrdinalIgnoreCase))
-                .Select(u => new UbicacionDto(u.Id, u.Nombre))
+                .Select(u => new UbicacionDto(u.Id, u.Nombre, u.IsActive))
                 .ToList()
                 .AsReadOnly();
 

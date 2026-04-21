@@ -27,7 +27,8 @@ namespace Inventario.Application.Queries.Usuarios.Search
                     u.NombreCompleto,
                     u.Email,
                     u.Area ?? "Sin Area",
-                    u.Cargo ?? "Sin Cargo"))
+                    u.Cargo ?? "Sin Cargo",
+                    u.IsActive))
                 .ToList()
                 .AsReadOnly();
 

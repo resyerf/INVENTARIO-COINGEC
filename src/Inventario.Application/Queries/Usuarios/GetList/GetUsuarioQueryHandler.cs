@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Interfaces.Repositories;
+using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace Inventario.Application.Queries.Usuarios.GetList
@@ -19,7 +19,8 @@ namespace Inventario.Application.Queries.Usuarios.GetList
                 u.NombreCompleto,
                 u.Email,
                 u.Area ?? "Sin Area",
-                u.Cargo ?? "Sin Cargo")).ToList().AsReadOnly();
+                u.Cargo ?? "Sin Cargo",
+                u.IsActive)).ToList().AsReadOnly();
         }
     }
 }

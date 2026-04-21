@@ -31,7 +31,8 @@ namespace Inventario.Application.Queries.Activos.GetList
                 a.SubCategoria?.Nombre ?? "Sin Categoria",
                 a.Usuario != null ? a.Usuario.NombreCompleto : "Sin Asignar",
                 a.Ubicacion?.Nombre ?? "Sin Ubicacion",
-                a.FechaAdquisicion
+                a.FechaAdquisicion,
+                a.IsActive
             )).ToList().AsReadOnly();
         }
     }

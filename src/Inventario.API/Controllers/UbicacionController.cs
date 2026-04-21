@@ -1,4 +1,5 @@
-﻿using Inventario.Application.Commands.Ubicaciones.Create;
+using Inventario.Application.Commands.Ubicaciones.Create;
+using Inventario.Application.Commands.Ubicaciones.Delete;
 using Inventario.Application.DTOs;
 using Inventario.Application.Queries.Ubicaciones.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,12 @@ namespace Inventario.API.Controllers
             var result = await Mediator.Send(command, cancellationToken);
 
             return Ok(result);
+        }
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            await Mediator.Send(new DeleteUbicacionCommand(id), cancellationToken);
+            return NoContent();
         }
     }
 }

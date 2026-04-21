@@ -1,4 +1,5 @@
 using Inventario.Application.Commands.SubCategorias;
+using Inventario.Application.Commands.SubCategorias.Delete;
 using Inventario.Application.DTOs;
 using Inventario.Application.Queries.SubCategorias.GetList;
 using Inventario.Application.Queries.SubCategorias.Search;
@@ -32,6 +33,12 @@ namespace Inventario.API.Controllers
         {
             var result = await Mediator.Send(new SearchSubCategoriasQuery(termino), cancellationToken);
             return Ok(result);
+        }
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            await Mediator.Send(new DeleteSubCategoriaCommand(id), cancellationToken);
+            return NoContent();
         }
     }
 }
