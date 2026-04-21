@@ -43,4 +43,17 @@ public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Email == email, cancellation);
     }
+
+    public async Task<IReadOnlyList<Usuario>> GetBySearchTermAsync(string termino, CancellationToken cancellationToken = default)
+    {
+        var query = DbContext.Usuarios.AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(termino))
+        {
+            var terminoLower = termino.ToLower();
+            query = query.Where(u => u.NombreCompleto.ToLower().Contains(terminoLower));
+        }
+
+        return await query.Take(10).ToListAsync(cancellationToken);
+    }
 }

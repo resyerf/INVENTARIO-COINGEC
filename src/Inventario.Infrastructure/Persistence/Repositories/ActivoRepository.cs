@@ -67,5 +67,18 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                 .Include(a => a.Ubicacion)
                 .ToListAsync(ct);
         }
+
+        public async Task<IReadOnlyList<Activo>> GetBySearchTermAsync(string termino, CancellationToken cancellationToken = default)
+        {
+            var query = DbContext.Activos.AsNoTracking();
+
+            if (!string.IsNullOrWhiteSpace(termino))
+            {
+                var terminoLower = termino.ToLower();
+                query = query.Where(u => u.NombreEquipo.ToLower().Contains(terminoLower));
+            }
+
+            return await query.Take(10).ToListAsync(cancellationToken);
+        }
     }
 }

@@ -15,13 +15,12 @@ namespace Inventario.Application.Queries.Activos.Search
 
         public async Task<IReadOnlyList<ActivoDto>> Handle(SearchActivosQuery request, CancellationToken cancellationToken)
         {
-            // Obtener todos los activos y filtrar por término si se proporciona
-            var activos = await _repository.GetAllAsync(cancellationToken);
+            if (string.IsNullOrWhiteSpace(request.Termino)) return new List<ActivoDto>().AsReadOnly();
 
-            var filtered = activos
-                .Where(a => string.IsNullOrWhiteSpace(request.Termino) || 
-                           a.NombreEquipo.Contains(request.Termino, StringComparison.OrdinalIgnoreCase) ||
-                           (a.Serie != null && a.Serie.Contains(request.Termino, StringComparison.OrdinalIgnoreCase)))
+            // Obtener todos los activos y filtrar por término si se proporciona
+            var activos = await _repository.GetBySearchTermAsync(request.Termino ,cancellationToken);
+
+            return activos
                 .Select(a => new ActivoDto(
                     a.Id,
                     a.NombreEquipo,
@@ -40,8 +39,6 @@ namespace Inventario.Application.Queries.Activos.Search
                     a.IsActive))
                 .ToList()
                 .AsReadOnly();
-
-            return filtered;
         }
     }
 }

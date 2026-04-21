@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Entities;
+using Inventario.Domain.Entities;
 using Inventario.Domain.Primitives;
 
 namespace Inventario.Domain.Interfaces.Repositories;
@@ -16,4 +16,5 @@ public interface IActivoRepository : IRepository<Activo>
     Task<List<Activo>> GetActivosAsignadosAUsuarioAsync(Guid usuarioId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<Activo>> GetAllForReportAsync(CancellationToken ct);
+    Task<IReadOnlyList<Activo>> GetBySearchTermAsync(string termino, CancellationToken cancellationToken = default);
 }

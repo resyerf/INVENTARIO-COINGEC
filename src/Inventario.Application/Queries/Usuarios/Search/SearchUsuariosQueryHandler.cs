@@ -15,13 +15,11 @@ namespace Inventario.Application.Queries.Usuarios.Search
 
         public async Task<IReadOnlyList<UsuarioDto>> Handle(SearchUsuariosQuery request, CancellationToken cancellationToken)
         {
-            var usuarios = await _repository.GetAllAsync(cancellationToken);
+            if (string.IsNullOrWhiteSpace(request.Termino)) return new List<UsuarioDto>().AsReadOnly();
 
-            var filtered = usuarios
-                .Where(u => string.IsNullOrWhiteSpace(request.Termino) ||
-                            u.NombreCompleto.Contains(request.Termino, StringComparison.OrdinalIgnoreCase) ||
-                            u.Email.Contains(request.Termino, StringComparison.OrdinalIgnoreCase) ||
-                            u.DocumentoIdentidad.Contains(request.Termino, StringComparison.OrdinalIgnoreCase))
+            var usuarios = await _repository.GetBySearchTermAsync(request.Termino, cancellationToken);
+
+            return usuarios
                 .Select(u => new UsuarioDto(
                     u.Id,
                     u.NombreCompleto,
@@ -31,8 +29,6 @@ namespace Inventario.Application.Queries.Usuarios.Search
                     u.IsActive))
                 .ToList()
                 .AsReadOnly();
-
-            return filtered;
         }
     }
 }
