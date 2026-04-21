@@ -25,7 +25,7 @@ namespace Inventario.Infrastructure.Persistence.Configurations
                 .HasForeignKey(c => c.UbicacionId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasIndex(c => c.Codigo).IsUnique();
+            builder.HasIndex(c => c.Codigo);
         }
     }
 }

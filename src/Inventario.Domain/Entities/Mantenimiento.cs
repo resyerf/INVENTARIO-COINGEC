@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Enums;
+using Inventario.Domain.Enums;
 using Inventario.Domain.Primitives;
 
 namespace Inventario.Domain.Entities
@@ -54,7 +54,7 @@ namespace Inventario.Domain.Entities
             Tipo = tipo;
             FechaMantenimiento = fechaMantenimiento;
             FechaCalibracion = fechaCalibracion;
-            Resultado = resultado;
+            Resultado = resultado?.ToUpperInvariant();
             Costo = costo;
             IsActive = true;
         }

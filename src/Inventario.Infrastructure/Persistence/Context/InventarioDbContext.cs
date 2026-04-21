@@ -1,4 +1,4 @@
-﻿using Inventario.Application.Data;
+using Inventario.Application.Data;
 using Inventario.Domain.Entities;
 using Inventario.Domain.Primitives;
 using MediatR;

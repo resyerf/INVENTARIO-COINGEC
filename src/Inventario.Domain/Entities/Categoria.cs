@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Primitives;
+using Inventario.Domain.Primitives;
 
 namespace Inventario.Domain.Entities
 {
@@ -27,7 +27,7 @@ namespace Inventario.Domain.Entities
 
         public static Categoria Create(string codigo, string descripcion, Guid ubicacionId)
         {
-            return new Categoria(Guid.NewGuid(), codigo.Trim().ToUpper(), descripcion, ubicacionId);
+            return new Categoria(Guid.NewGuid(), codigo?.Trim().ToUpperInvariant() ?? string.Empty, descripcion?.ToUpperInvariant() ?? string.Empty, ubicacionId);
         }
 
         /// <summary>

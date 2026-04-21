@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Primitives;
+using Inventario.Domain.Primitives;
 
 namespace Inventario.Domain.Entities
 {
@@ -29,12 +29,12 @@ namespace Inventario.Domain.Entities
             string cargo,
             string sede) : base(id)
         {
-            NombreCompleto = nombreCompleto;
-            DocumentoIdentidad = documentoIdentidad;
-            Email = email;
-            Area = area;
-            Cargo = cargo;
-            Sede = sede;
+            NombreCompleto = nombreCompleto?.ToUpperInvariant() ?? string.Empty;
+            DocumentoIdentidad = documentoIdentidad?.ToUpperInvariant() ?? string.Empty;
+            Email = email; // Mantenemos el formato original
+            Area = area?.ToUpperInvariant() ?? string.Empty;
+            Cargo = cargo?.ToUpperInvariant();
+            Sede = sede?.ToUpperInvariant();
             IsActive = true;
         }
 
@@ -53,12 +53,12 @@ namespace Inventario.Domain.Entities
 
             var usuario = new Usuario(
                 Guid.NewGuid(),
-                nombreCompleto,
+                nombreCompleto?.ToUpperInvariant(),
                 documentoIdentidad,
                 email,
-                area,
-                cargo,
-                sede
+                area?.ToUpperInvariant(),
+                cargo?.ToUpperInvariant(),
+                sede?.ToUpperInvariant()
             );
 
             // Ejemplo: Si quisieras disparar un evento cuando se crea un usuario

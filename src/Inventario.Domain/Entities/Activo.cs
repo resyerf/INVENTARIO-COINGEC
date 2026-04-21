@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Primitives;
+using Inventario.Domain.Primitives;
 
 namespace Inventario.Domain.Entities
 {
@@ -53,14 +53,14 @@ namespace Inventario.Domain.Entities
             return new Activo
             {
                 Id = Guid.NewGuid(),
-                NombreEquipo = nombreEquipo,
+                NombreEquipo = nombreEquipo?.ToUpperInvariant() ?? string.Empty,
                 SubCategoriaId = subCategoriaId,
                 CostoUnitario = costoUnitario,
                 Cantidad = cantidad,
-                Marca = marca,
-                Modelo = modelo,
-                Serie = serie,
-                Etiquetado = etiquetado,
+                Marca = marca?.ToUpperInvariant(),
+                Modelo = modelo?.ToUpperInvariant(),
+                Serie = serie?.ToUpperInvariant(),
+                Etiquetado = etiquetado?.ToUpperInvariant() ?? "-",
                 UbicacionId = ubicacionId,
                 FechaAdquisicion = fechaAdquisicion.HasValue
                 ? DateTime.SpecifyKind(fechaAdquisicion.Value, DateTimeKind.Utc)

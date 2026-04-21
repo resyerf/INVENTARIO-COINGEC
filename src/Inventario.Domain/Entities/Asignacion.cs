@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Primitives;
+using Inventario.Domain.Primitives;
 
 namespace Inventario.Domain.Entities
 {
@@ -31,7 +31,7 @@ namespace Inventario.Domain.Entities
             ActivoId = activoId;
             UsuarioId = usuarioId;
             FechaAsignacion = DateTime.UtcNow;
-            EstadoEntrega = estadoEntrega;
+            EstadoEntrega = estadoEntrega?.ToUpperInvariant() ?? string.Empty;
             IsActive = true;
         }
 
@@ -45,8 +45,8 @@ namespace Inventario.Domain.Entities
         public void FinalizarAsignacion(string estadoRecibido, string? observaciones)
         {
             FechaDevolucion = DateTime.UtcNow;
-            EstadoRecibido = estadoRecibido;
-            Observaciones = observaciones;
+            EstadoRecibido = estadoRecibido?.ToUpperInvariant();
+            Observaciones = observaciones?.ToUpperInvariant();
         }
 
         /// <summary>

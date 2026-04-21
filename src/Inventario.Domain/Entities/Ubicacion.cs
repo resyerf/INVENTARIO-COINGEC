@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Primitives;
+using Inventario.Domain.Primitives;
 
 namespace Inventario.Domain.Entities
 {
@@ -17,8 +17,8 @@ namespace Inventario.Domain.Entities
             return new Ubicacion
             {
                 Id = Guid.NewGuid(),
-                Nombre = nombre.ToUpper().Trim(),
-                Descripcion = descripcion,
+                Nombre = nombre?.ToUpperInvariant().Trim() ?? string.Empty,
+                Descripcion = descripcion?.ToUpperInvariant(),
                 IsActive = true
             };
         }

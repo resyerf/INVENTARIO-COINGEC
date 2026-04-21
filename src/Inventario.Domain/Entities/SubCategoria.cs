@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Primitives;
+using Inventario.Domain.Primitives;
 
 namespace Inventario.Domain.Entities
 {
@@ -20,7 +20,7 @@ namespace Inventario.Domain.Entities
             return new SubCategoria
             {
                 Id = Guid.NewGuid(),
-                Nombre = nombre,
+                Nombre = nombre?.ToUpperInvariant() ?? string.Empty,
                 CategoriaId = categoriaId,
                 IsActive = true
             };
