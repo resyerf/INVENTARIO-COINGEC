@@ -6,6 +6,7 @@
         Task<List<T>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<int> CountAsync(CancellationToken cancellationToken = default);
         void Add(T entity);
+        void AddRange(IEnumerable<T> entities);
         void Update(T entity);
         void Delete(T entity);
     }

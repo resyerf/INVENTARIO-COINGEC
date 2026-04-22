@@ -1,4 +1,5 @@
-using Inventario.Application.Commands.SubCategorias;
+using Inventario.Application.Commands.SubCategorias.Create;
+using Inventario.Application.Commands.SubCategorias.CreateMasiv;
 using Inventario.Application.Commands.SubCategorias.Delete;
 using Inventario.Application.DTOs;
 using Inventario.Application.Queries.SubCategorias.GetList;
@@ -39,6 +40,16 @@ namespace Inventario.API.Controllers
         {
             await Mediator.Send(new DeleteSubCategoriaCommand(id), cancellationToken);
             return NoContent();
+        }
+
+        [HttpPost("create-masiv")]
+        public async Task<IActionResult> CreateMasiv([FromBody] CreateMasivSubCategoriaCommand command, CancellationToken cancellationToken)
+        {
+            // El validador de FluentValidation se ejecuta automáticamente antes de entrar aquí 
+            // si tienes configurado el ValidationBehavior en MediatR.
+            var result = await Mediator.Send(command, cancellationToken);
+
+            return Ok(result);
         }
     }
 }

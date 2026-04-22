@@ -3,7 +3,7 @@ using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
 using MediatR;
 
-namespace Inventario.Application.Commands.SubCategorias
+namespace Inventario.Application.Commands.SubCategorias.Create
 {
     internal sealed class CreateSubCategoriaCommandHandler : IRequestHandler<CreateSubCategoriaCommand, Guid>
     {

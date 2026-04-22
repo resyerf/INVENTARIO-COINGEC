@@ -1,4 +1,5 @@
-﻿using Inventario.Domain.Primitives;
+﻿using Inventario.Domain.Entities;
+using Inventario.Domain.Primitives;
 using Inventario.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +32,7 @@ namespace Inventario.Infrastructure.Persistence.Repositories
         }
 
         public void Add(T entity) => DbContext.Set<T>().Add(entity);
+        public void AddRange(IEnumerable<T> entities) => DbContext.Set<T>().AddRange(entities);
 
         public void Update(T entity) => DbContext.Set<T>().Update(entity);
 

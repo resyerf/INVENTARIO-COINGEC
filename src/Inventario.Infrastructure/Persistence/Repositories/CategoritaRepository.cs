@@ -21,8 +21,8 @@ namespace Inventario.Infrastructure.Persistence.Repositories
         {
             return await DbContext.Categorias
                 .AsNoTracking()
-                .Where(c => c.Descripcion.ToLower().StartsWith(termino.ToLower()))
-                .Take(10)
+                .Include(c => c.Ubicacion)
+                .Where(c => c.Descripcion.StartsWith(termino) || c.Codigo.StartsWith(termino)).Take(10)
                 .ToListAsync(cancellationToken);
         }
 

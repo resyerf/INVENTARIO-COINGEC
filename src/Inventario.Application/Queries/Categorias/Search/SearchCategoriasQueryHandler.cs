@@ -19,14 +19,14 @@ namespace Inventario.Application.Queries.Categorias.Search
                 return new List<CategoriaDto>().AsReadOnly();
 
             // Buscamos en el repositorio filtrando por el inicio del nombre
-            var categorias = await _repository.SearchByTermAsync(request.Termino, cancellationToken);
+            var categorias = await _repository.SearchByTermAsync(request.Termino.ToUpper(), cancellationToken);
 
             return categorias.Select(c => new CategoriaDto(
                 c.Id,
                 c.Codigo,
                 c.Descripcion,
-                c.Ubicacion.Nombre,
-                c.Ubicacion.Descripcion ?? "Sin descripcion",
+                c.Ubicacion?.Nombre ?? "-",
+                c.Ubicacion?.Descripcion ?? "Sin descripcion",
                 c.IsActive
             )).ToList().AsReadOnly();
         }
