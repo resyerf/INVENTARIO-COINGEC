@@ -5,6 +5,7 @@ namespace Inventario.Domain.Entities
     public sealed class Activo : AggregateRoot
     {
         public string NombreEquipo { get; private set; } = string.Empty;
+        public string CodigoEquipo { get;private set; } = string.Empty;
         public string? Marca { get; private set; }
         public string? Modelo { get; private set; }
         public string? Serie { get; private set; }
@@ -40,6 +41,7 @@ namespace Inventario.Domain.Entities
 
         public static Activo Create(
             string nombreEquipo,
+            string codigoEquipo,
             Guid subCategoriaId,
             decimal costoUnitario = 0,
             int cantidad = 1,
@@ -54,6 +56,7 @@ namespace Inventario.Domain.Entities
             {
                 Id = Guid.NewGuid(),
                 NombreEquipo = nombreEquipo?.ToUpperInvariant() ?? string.Empty,
+                CodigoEquipo = codigoEquipo?.ToUpperInvariant() ?? string.Empty,
                 SubCategoriaId = subCategoriaId,
                 CostoUnitario = costoUnitario,
                 Cantidad = cantidad,

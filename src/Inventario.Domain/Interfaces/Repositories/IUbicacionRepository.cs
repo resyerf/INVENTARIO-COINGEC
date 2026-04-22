@@ -8,4 +8,5 @@ public interface IUbicacionRepository : IRepository<Ubicacion>
     // Método específico para validar por nombre (SOTANO, TALLER)
     Task<Ubicacion?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Ubicacion>> GetBySearchTermAsync(string termino, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Ubicacion>> SearchByListCodeAsync(List<string> codes, CancellationToken cancellationToken);
 }

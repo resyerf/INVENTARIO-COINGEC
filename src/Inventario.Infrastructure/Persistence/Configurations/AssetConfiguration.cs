@@ -17,6 +17,11 @@ namespace Inventario.Infrastructure.Persistence.Configurations
                 .HasMaxLength(250)
                 .IsRequired(); // Este es el único obligatorio para saber qué es
 
+            builder.Property(x => x.CodigoEquipo)
+                .HasColumnName("equipment_code")
+                .HasMaxLength(100)
+                .IsRequired();
+
             builder.Property(x => x.Marca)
                 .HasColumnName("brand")
                 .HasMaxLength(100)
@@ -35,7 +40,8 @@ namespace Inventario.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Etiquetado)
                 .HasColumnName("labeling_status")
                 .HasMaxLength(50)
-                .HasDefaultValue("-"); // "Etiquetado por defecto -"
+                .HasDefaultValue("-")
+                .IsRequired(false); // "Etiquetado por defecto -"
 
             builder.Property(x => x.CostoUnitario)
                 .HasColumnName("unit_cost")

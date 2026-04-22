@@ -1,7 +1,9 @@
 using Inventario.Application.Data;
+using Inventario.Application.Interfaces.Services;
 using Inventario.Domain.Primitives;
 using Inventario.Infrastructure.Persistence.Context;
 using Inventario.Infrastructure.Persistence.Repositories;
+using Inventario.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,7 +53,8 @@ namespace Inventario.Infrastructure
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddTransient<Inventario.Application.Interfaces.Services.IExcelExportService, Inventario.Infrastructure.Services.ExcelExportService>();
+            services.AddTransient<IExcelExportService, ExcelExportService>();
+            services.AddTransient<IExcelImportService, ExcelImportService>();
             return services;
         }
     }

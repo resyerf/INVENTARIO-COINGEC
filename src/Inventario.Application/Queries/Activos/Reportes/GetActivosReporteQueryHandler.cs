@@ -19,6 +19,7 @@ namespace Inventario.Application.Queries.Activos.Reportes
 
             return activos.Select(a => new ActivoReporteDto(
                 a.NombreEquipo,
+                a.CodigoEquipo,
                 a.Marca ?? "N/A",
                 a.Modelo ?? "N/A",
                 a.Serie ?? "N/A",

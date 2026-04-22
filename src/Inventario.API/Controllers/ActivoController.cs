@@ -6,6 +6,7 @@ using Inventario.Application.Queries.Activos.Search;
 using Inventario.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Inventario.Application.Queries.Activos.Export;
+using Inventario.Application.Commands.Activos.Import;
 
 namespace Inventario.API.Controllers
 {
@@ -61,6 +62,20 @@ namespace Inventario.API.Controllers
         {
             await Mediator.Send(new DeleteActivoCommand(id), cancellationToken);
             return NoContent();
+        }
+
+        [HttpPost("import")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ImportExcel(IFormFile file, CancellationToken ct)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Archivo inválido");
+
+            using var stream = file.OpenReadStream();
+
+            var result = await Mediator.Send(new ImportActivosCommand(stream, file.FileName), ct);
+
+            return Ok(result);
         }
     }
 }

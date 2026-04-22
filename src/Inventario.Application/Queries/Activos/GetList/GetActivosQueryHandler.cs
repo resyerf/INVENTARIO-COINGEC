@@ -20,6 +20,7 @@ namespace Inventario.Application.Queries.Activos.GetList
             return activos.Select(a => new ActivoDto(
                 a.Id,
                 a.NombreEquipo,
+                a.CodigoEquipo,
                 a.Marca,
                 a.Modelo,
                 a.Serie,

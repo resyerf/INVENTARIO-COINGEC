@@ -33,5 +33,13 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                 .Include(c => c.Ubicacion)
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task<IReadOnlyList<Categoria>> SearchByListCodeAsync(List<string> codes, CancellationToken cancellationToken)
+        {
+            return await DbContext.Categorias
+                .AsNoTracking()
+                .Where(s => codes.Contains(s.Codigo.ToUpper()))
+                .ToListAsync(cancellationToken);
+        }
     }
 }

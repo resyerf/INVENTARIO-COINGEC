@@ -22,6 +22,7 @@ namespace Inventario.Application.Queries.Activos.Export
 
             var reportData = activos.Select(a => new ActivoReporteDto(
                 a.NombreEquipo,
+                a.CodigoEquipo,
                 a.Marca ?? string.Empty,
                 a.Modelo ?? string.Empty,
                 a.Serie ?? string.Empty,
@@ -39,13 +40,14 @@ namespace Inventario.Application.Queries.Activos.Export
             var columns = new Dictionary<string, Func<ActivoReporteDto, object?>>
             {
                 { "Equipo", x => x.NombreEquipo },
+                { "Código", x => x.CodigoEquipo  },
                 { "Marca", x => x.Marca },
                 { "Modelo", x => x.Modelo },
                 { "Serie", x => x.Serie },
                 { "Etiquetado", x => x.Etiquetado },
                 { "Estado", x => x.Estado },
                 { "Subcategoría", x => x.SubCategoriaNombre },
-                { "Código Categoría", x => x.CategoriaCodigo },
+                { "Clasificación por Tipo", x => x.CategoriaCodigo },
                 { "Ubicación", x => x.UbicacionNombre },
                 { "Responsable", x => x.Responsable },
                 { "Costo Unitario", x => x.CostoUnitario },

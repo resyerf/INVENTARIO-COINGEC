@@ -29,4 +29,12 @@ public class UbicacionRepository : Repository<Ubicacion>, IUbicacionRepository
 
         return await query.Take(10).ToListAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<Ubicacion>> SearchByListCodeAsync(List<string> codes, CancellationToken cancellationToken)
+    {
+        return await DbContext.Ubicaciones
+            .AsNoTracking()
+            .Where(u => codes.Contains(u.Nombre))
+            .ToListAsync(cancellationToken);
+    }
 }

@@ -7,5 +7,6 @@ namespace Inventario.Domain.Interfaces.Repositories
     {
         Task<IReadOnlyList<SubCategoria>> GetAllWithIncludesAsync(CancellationToken cancellationToken = default);
         Task<IReadOnlyList<SubCategoria>> GetByCategoriaAndTermAsync(string termino, CancellationToken cancellationToken);
+        Task<IReadOnlyList<SubCategoria>> GetByCategoriaByListCodeAsync(List<string> codeCategoria, CancellationToken cancellationToken);
     }
 }

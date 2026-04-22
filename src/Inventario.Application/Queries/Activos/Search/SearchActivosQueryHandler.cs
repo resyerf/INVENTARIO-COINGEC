@@ -24,6 +24,7 @@ namespace Inventario.Application.Queries.Activos.Search
                 .Select(a => new ActivoDto(
                     a.Id,
                     a.NombreEquipo,
+                    a.CodigoEquipo,
                     a.Marca,
                     a.Modelo,
                     a.Serie,

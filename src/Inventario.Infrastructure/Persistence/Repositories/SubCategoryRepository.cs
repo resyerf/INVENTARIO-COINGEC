@@ -29,5 +29,23 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                 .Take(10)
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task<IReadOnlyList<SubCategoria>> GetByCategoriaByListCodeAsync(List<string> codeCategoria, CancellationToken cancellationToken)
+        {
+            if (codeCategoria == null || !codeCategoria.Any())
+                return new List<SubCategoria>();
+
+            // Normalizar (igual que haces con ToUpperInvariant en otros lados)
+            var codes = codeCategoria
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Select(c => c.ToUpperInvariant())
+                .ToList();
+
+            return await DbContext.SubCategorias
+                .AsNoTracking()
+                .Include(s => s.Categoria)
+                .Where(s => codes.Contains(s.Categoria.Codigo.ToUpper()))
+                .ToListAsync(cancellationToken);
+        }
     }
 }

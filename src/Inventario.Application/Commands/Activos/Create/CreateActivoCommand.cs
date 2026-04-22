@@ -3,6 +3,7 @@
 namespace Inventario.Application.Commands.Activos.Create
 {
     public record CreateActivoCommand(string NombreEquipo,
+        string CodigoEquipo,
         Guid SubCategoriaId,
         decimal CostoUnitario,
         int Cantidad,

@@ -2,6 +2,7 @@
 {
     public record ActivoReporteDto(
         string NombreEquipo,
+        string CodigoEquipo,
         string Marca,
         string Modelo,
         string Serie,
