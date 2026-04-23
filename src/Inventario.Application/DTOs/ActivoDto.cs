@@ -3,7 +3,7 @@ namespace Inventario.Application.DTOs
     public record ActivoDto(
         Guid Id,
         string NombreEquipo,
-        string CodigoEquipo,
+        string? CodigoEquipo,
         string? Marca,
         string? Modelo,
         string? Serie,

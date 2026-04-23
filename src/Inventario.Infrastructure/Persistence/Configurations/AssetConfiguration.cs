@@ -19,8 +19,7 @@ namespace Inventario.Infrastructure.Persistence.Configurations
 
             builder.Property(x => x.CodigoEquipo)
                 .HasColumnName("equipment_code")
-                .HasMaxLength(100)
-                .IsRequired();
+                .HasMaxLength(100);
 
             builder.Property(x => x.Marca)
                 .HasColumnName("brand")

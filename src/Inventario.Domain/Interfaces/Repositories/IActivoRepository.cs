@@ -17,4 +17,5 @@ public interface IActivoRepository : IRepository<Activo>
 
     Task<IReadOnlyList<Activo>> GetAllForReportAsync(CancellationToken ct);
     Task<IReadOnlyList<Activo>> GetBySearchTermAsync(string termino, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Activo>> GetExistingCodesAsync(List<string> codigosEquipo, CancellationToken cancellationToken = default);
 }

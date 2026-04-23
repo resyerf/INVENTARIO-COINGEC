@@ -27,6 +27,7 @@ namespace Inventario.Application.Commands.Activos.Create
                 request.Marca,
                 request.Modelo,
                 request.Serie,
+                request.EstadoCondicion,
                 request.Etiquetado,
                 request.UbicacionId,
                 request.FechaAdquisicion

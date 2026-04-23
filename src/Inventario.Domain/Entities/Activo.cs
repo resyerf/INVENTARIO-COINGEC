@@ -5,7 +5,7 @@ namespace Inventario.Domain.Entities
     public sealed class Activo : AggregateRoot
     {
         public string NombreEquipo { get; private set; } = string.Empty;
-        public string CodigoEquipo { get;private set; } = string.Empty;
+        public string? CodigoEquipo { get;private set; } = string.Empty;
         public string? Marca { get; private set; }
         public string? Modelo { get; private set; }
         public string? Serie { get; private set; }
@@ -41,13 +41,14 @@ namespace Inventario.Domain.Entities
 
         public static Activo Create(
             string nombreEquipo,
-            string codigoEquipo,
+            string? codigoEquipo,
             Guid subCategoriaId,
             decimal costoUnitario = 0,
             int cantidad = 1,
             string? marca = null,
             string? modelo = null,
             string? serie = null,
+            string? estado = null,
             string etiquetado = "-", // Por defecto "-"
             Guid? ubicacionId = null,
             DateTime? fechaAdquisicion = null)
@@ -68,7 +69,7 @@ namespace Inventario.Domain.Entities
                 FechaAdquisicion = fechaAdquisicion.HasValue
                 ? DateTime.SpecifyKind(fechaAdquisicion.Value, DateTimeKind.Utc)
                 : null,
-                Estado = "Bien",
+                Estado = estado?.ToUpperInvariant() ?? "BUENO",
                 IsActive = true
             };
         }

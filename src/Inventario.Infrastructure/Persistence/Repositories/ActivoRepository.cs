@@ -80,5 +80,13 @@ namespace Inventario.Infrastructure.Persistence.Repositories
 
             return await query.Take(10).ToListAsync(cancellationToken);
         }
+
+        public async Task<IReadOnlyList<Activo>> GetExistingCodesAsync(List<string> codigosEquipo, CancellationToken cancellationToken = default)
+        {
+            return await DbContext.Activos
+                        .AsNoTracking()
+                        .Where(u => u.CodigoEquipo != null && codigosEquipo.Contains(u.CodigoEquipo))
+                        .ToListAsync(cancellationToken);
+        }
     }
 }

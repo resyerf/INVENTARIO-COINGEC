@@ -76,11 +76,6 @@ namespace Inventario.Infrastructure.Services
 
             return result;
         }
-
-        private static string Clean(string? value)
-        {
-            return value?.Trim().ToUpperInvariant() ?? string.Empty;
-        }
         private static string Normalize(string? value)
             => value?.Trim().ToUpperInvariant() ?? string.Empty;
 
