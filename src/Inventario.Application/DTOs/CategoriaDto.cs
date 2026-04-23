@@ -4,6 +4,7 @@ namespace Inventario.Application.DTOs
         Guid Id,
         string Codigo,
         string Descripcion,
+        string Valores,
         string Ubicacion,
         string UbicacionDescripcion,
         bool IsActive);

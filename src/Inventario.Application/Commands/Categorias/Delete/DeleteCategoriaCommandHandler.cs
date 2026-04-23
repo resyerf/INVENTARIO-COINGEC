@@ -1,11 +1,12 @@
 using Inventario.Domain.Interfaces.Repositories;
+using Inventario.Domain.Primitives;
 using MediatR;
 namespace Inventario.Application.Commands.Categorias.Delete
 {
     internal sealed class DeleteCategoriaCommandHandler : IRequestHandler<DeleteCategoriaCommand>
     {
         private readonly ICategoriaRepository _repository;
-        private readonly Inventario.Domain.Primitives.IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         public DeleteCategoriaCommandHandler(ICategoriaRepository repository, Inventario.Domain.Primitives.IUnitOfWork unitOfWork)
         {
             _repository = repository;

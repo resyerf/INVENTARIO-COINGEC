@@ -76,6 +76,50 @@ namespace Inventario.Infrastructure.Services
 
             return result;
         }
+
+        public byte[] GenerateErrorReport<T>(Stream originalStream, List<(int RowIndex, string Motivo)> errores) where T : class
+        {
+            // Reiniciamos la posición del stream por si fue leído previamente
+            if (originalStream.CanSeek) originalStream.Position = 0;
+
+            using var workbook = new XLWorkbook(originalStream);
+            var worksheet = workbook.Worksheet(1);
+
+            // 1. Identificar la última columna para poner el mensaje de error
+            var lastColumnUsed = worksheet.LastColumnUsed().ColumnNumber();
+            var errorColumn = lastColumnUsed + 1;
+
+            // Header de error
+            var headerCell = worksheet.Cell(1, errorColumn);
+            headerCell.Value = "MOTIVO_ERROR";
+            headerCell.Style.Font.SetBold().Font.SetFontColor(XLColor.White);
+            headerCell.Style.Fill.SetBackgroundColor(XLColor.DarkRed);
+
+            // 2. Procesar los errores
+            foreach (var (rowIndex, motivo) in errores)
+            {
+                var row = worksheet.Row(rowIndex);
+
+                // Resaltar toda la fila en un rojo claro (Misty Rose)
+                row.Style.Fill.SetBackgroundColor(XLColor.MistyRose);
+
+                // Escribir el motivo del error en la última columna
+                var cellError = worksheet.Cell(rowIndex, errorColumn);
+                cellError.Value = motivo;
+                cellError.Style.Font.SetFontColor(XLColor.Red).Font.SetBold();
+
+                // Borde opcional para resaltar la celda de error
+                cellError.Style.Border.SetOutsideBorder(XLBorderStyleValues.Thin);
+                cellError.Style.Border.SetOutsideBorderColor(XLColor.Red);
+            }
+
+            worksheet.Columns().AdjustToContents();
+
+            using var ms = new MemoryStream();
+            workbook.SaveAs(ms);
+            return ms.ToArray();
+        }
+
         private static string Normalize(string? value)
             => value?.Trim().ToUpperInvariant() ?? string.Empty;
 

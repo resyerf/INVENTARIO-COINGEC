@@ -24,10 +24,10 @@ internal sealed class CreateCategoriaCommandHandler : IRequestHandler<CreateCate
     public async Task<Guid> Handle(CreateCategoriaCommand request, CancellationToken cancellationToken)
     {
         // 1. Validar código
-        var existe = await _categoriaRepository.GetByCodeAsync(request.Codigo, cancellationToken);
+        var existe = await _categoriaRepository.GetByCodeAndUbicacionIdAsync(request.Codigo, request.UbicacionId, cancellationToken);
         if (existe is not null)
         {
-            throw new Exception($"El código {request.Codigo} ya existe.");
+            throw new Exception($"El código {request.Codigo} ya existe en esta ubicación");
         }
 
         // 2. Validar ubicación (SOTANO/TALLER)
@@ -42,6 +42,7 @@ internal sealed class CreateCategoriaCommandHandler : IRequestHandler<CreateCate
         var categoria = Categoria.Create(
             request.Codigo,
             request.Descripcion,   // <-- Si viene vacío en el JSON, no pasa nada
+            request.Valores,
             request.UbicacionId
         );
 

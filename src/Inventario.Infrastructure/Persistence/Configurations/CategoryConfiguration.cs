@@ -14,6 +14,7 @@ namespace Inventario.Infrastructure.Persistence.Configurations
 
             builder.Property(c => c.Codigo).HasColumnName("code").HasMaxLength(20).IsRequired();
             builder.Property(c => c.Descripcion).HasColumnName("description").HasMaxLength(200).IsRequired();
+            builder.Property(c => c.Valores).HasColumnName("category_values").IsRequired();
 
             builder.Property(c => c.IsActive)
                 .HasColumnName("is_active")

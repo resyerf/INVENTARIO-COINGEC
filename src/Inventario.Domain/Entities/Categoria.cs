@@ -6,6 +6,7 @@ namespace Inventario.Domain.Entities
     {
         public string Codigo { get; private set; } = string.Empty;
         public string Descripcion { get; private set; } = string.Empty;
+        public string Valores { get; private set; } = string.Empty;
 
         // Solo añadimos esto para que sepa si es de SOTANO o TALLER
         public Guid UbicacionId { get; private set; }
@@ -16,18 +17,25 @@ namespace Inventario.Domain.Entities
 
         private Categoria() { }
 
-        private Categoria(Guid id, string codigo, string descripcion, Guid ubicacionId)
+        private Categoria(Guid id, string codigo, string descripcion, string valores, Guid ubicacionId)
             : base(id)
         {
             Codigo = codigo;
             Descripcion = descripcion;
+            Valores = string.IsNullOrWhiteSpace(valores) ? string.Empty : valores.Trim().ToUpperInvariant();
             UbicacionId = ubicacionId;
             IsActive = true;
         }
 
-        public static Categoria Create(string codigo, string descripcion, Guid ubicacionId)
+        public static Categoria Create(string codigo, string descripcion, string valores, Guid ubicacionId)
         {
-            return new Categoria(Guid.NewGuid(), codigo?.Trim().ToUpperInvariant() ?? string.Empty, descripcion?.ToUpperInvariant() ?? string.Empty, ubicacionId);
+            return new Categoria(
+                Guid.NewGuid(), 
+                codigo?.Trim().ToUpperInvariant() ?? string.Empty, 
+                descripcion?.ToUpperInvariant() ?? string.Empty, 
+                valores?.ToUpperInvariant() ?? string.Empty, 
+                ubicacionId
+            );
         }
 
         /// <summary>

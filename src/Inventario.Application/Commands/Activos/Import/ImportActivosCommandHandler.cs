@@ -1,10 +1,10 @@
-﻿using System.Collections.Frozen;
-using Inventario.Application.DTOs;
+﻿using Inventario.Application.DTOs;
 using Inventario.Application.Interfaces.Services;
 using Inventario.Domain.Entities;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
 using MediatR;
+using System.Collections.Frozen;
 
 namespace Inventario.Application.Commands.Activos.Import
 {
@@ -13,14 +13,14 @@ namespace Inventario.Application.Commands.Activos.Import
     ISubCategoryRepository subCategoryRepository,
     IUbicacionRepository ubicacionRepository,
     IActivoRepository activoRepository,
-    IUnitOfWork unitOfWork) : IRequestHandler<ImportActivosCommand, Unit>
+    IUnitOfWork unitOfWork) : IRequestHandler<ImportActivosCommand, ImportResult>
     {
-        public async Task<Unit> Handle(ImportActivosCommand request, CancellationToken cancellationToken)
+        public async Task<ImportResult> Handle(ImportActivosCommand request, CancellationToken cancellationToken)
         {
             List<ActivoImportDto> items = excelService.Import<ActivoImportDto>(request.FileStream).ToList();
-            if (items.Count == 0) return Unit.Value;
+            if (items.Count == 0) return new ImportResult(true, 0, 0);
 
-            List<(ActivoImportDto item, string motivo)> errores = new();
+            List<(int RowIndex, string Motivo)> erroresReporte = new();
 
             List<string?> codigosCats = items
                 .Select(x => x.Tipo?.Trim().ToUpperInvariant())
@@ -48,8 +48,7 @@ namespace Inventario.Application.Commands.Activos.Import
                 .GroupBy(s => s.Categoria.Codigo.ToUpperInvariant())
                 .ToFrozenDictionary(g => g.Key, g => g.First());
 
-            Dictionary<string, Ubicacion> ubicacionDict =
-                ubicacionesDb.ToDictionary(u => u.Nombre.ToUpperInvariant());
+            Dictionary<string, Ubicacion> ubicacionDict = ubicacionesDb.ToDictionary(u => u.Nombre.ToUpperInvariant());
 
             HashSet<string> codigosExistentesSet = activosConCodigo
                 .Select(x => x.CodigoEquipo!)
@@ -65,31 +64,38 @@ namespace Inventario.Application.Commands.Activos.Import
             List<Activo> nuevosActivos = new();
             List<Ubicacion> nuevasUbicaciones = new();
 
-            foreach (ActivoImportDto item in items)
+            for (int i = 0; i < items.Count; i++)
             {
+                var item = items[i];
+                int excelRow = i + 2;
                 string? codigoLimpio = item.CodigoEquipo?.Trim().ToUpperInvariant();
 
                 if (!string.IsNullOrWhiteSpace(codigoLimpio))
                 {
                     if (duplicadosExcel.Contains(codigoLimpio))
                     {
-                        errores.Add((item, $"El código {codigoLimpio} está duplicado en el archivo"));
+                        erroresReporte.Add((excelRow, $"El código {codigoLimpio} está duplicado en el archivo"));
                         continue;
                     }
 
                     if (codigosExistentesSet.Contains(codigoLimpio))
                     {
-                        errores.Add((item, $"El código {codigoLimpio} ya está registrado"));
+                        erroresReporte.Add((excelRow, $"El código {codigoLimpio} ya está registrado"));
                         continue;
                     }
-
                     codigosExistentesSet.Add(codigoLimpio);
                 }
 
                 var tipoKey = item.Tipo?.Trim().ToUpperInvariant();
                 if (string.IsNullOrEmpty(tipoKey) || !subCatDict.TryGetValue(tipoKey, out var subCat))
                 {
-                    errores.Add((item, "Tipo inválido o no existe"));
+                    erroresReporte.Add((excelRow, "Tipo inválido o no existe"));
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(item.NombreEquipo))
+                {
+                    erroresReporte.Add((excelRow, "NombreEquipo es obligatorio"));
                     continue;
                 }
 
@@ -104,12 +110,6 @@ namespace Inventario.Application.Commands.Activos.Import
                         ubicacionDict.Add(ubiKey, ubicacion);
                         nuevasUbicaciones.Add(ubicacion);
                     }
-                }
-
-                if (string.IsNullOrWhiteSpace(item.NombreEquipo))
-                {
-                    errores.Add((item, "NombreEquipo es obligatorio"));
-                    continue;
                 }
 
                 nuevosActivos.Add(Activo.Create(
@@ -128,6 +128,12 @@ namespace Inventario.Application.Commands.Activos.Import
                 ));
             }
 
+            if (erroresReporte.Count > 0)
+            {
+                byte[] fileError = excelService.GenerateErrorReport<ActivoImportDto>(request.FileStream, erroresReporte);
+                return new ImportResult(false, 0, erroresReporte.Count, fileError);
+            }
+
             if (nuevasUbicaciones.Count > 0)
                 ubicacionRepository.AddRange(nuevasUbicaciones);
 
@@ -136,7 +142,7 @@ namespace Inventario.Application.Commands.Activos.Import
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            return new ImportResult(true, nuevosActivos.Count, 0);
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Inventario.Application.Queries.Categorias.GetList
                 u.Id,
                 u.Codigo,
                 u.Descripcion,
+                u.Valores,
                 u.Ubicacion.Nombre,
                 u.Ubicacion.Descripcion ?? "Sin descripcion",
                 u.IsActive)).ToList().AsReadOnly();

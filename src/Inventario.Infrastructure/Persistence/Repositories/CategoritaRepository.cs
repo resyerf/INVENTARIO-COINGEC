@@ -11,11 +11,11 @@ namespace Inventario.Infrastructure.Persistence.Repositories
         {
         }
 
-        public async Task<Categoria?> GetByCodeAsync(string code, CancellationToken cancellationToken = default)
+        public async Task<Categoria?> GetByCodeAndUbicacionIdAsync(string code, Guid ubicacionId, CancellationToken cancellationToken = default)
         {
             return await DbContext.Categorias
                 .Include(c => c.Ubicacion) // Opcional: solo si necesitas saber si es SOTANO/TALLER
-                .FirstOrDefaultAsync(c => c.Codigo == code.ToUpper().Trim(), cancellationToken);
+                .FirstOrDefaultAsync(c => c.Codigo == code.ToUpper().Trim() && c.UbicacionId == ubicacionId, cancellationToken);
         }
         public async Task<IReadOnlyList<Categoria>> SearchByTermAsync(string termino, CancellationToken cancellationToken)
         {

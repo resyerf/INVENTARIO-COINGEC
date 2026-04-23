@@ -25,6 +25,7 @@ namespace Inventario.Application.Queries.Categorias.Search
                 c.Id,
                 c.Codigo,
                 c.Descripcion,
+                c.Valores,
                 c.Ubicacion?.Nombre ?? "-",
                 c.Ubicacion?.Descripcion ?? "Sin descripcion",
                 c.IsActive

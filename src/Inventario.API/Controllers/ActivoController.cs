@@ -69,13 +69,27 @@ namespace Inventario.API.Controllers
         public async Task<IActionResult> ImportExcel(IFormFile file, CancellationToken ct)
         {
             if (file == null || file.Length == 0)
-                return BadRequest("Archivo inválido");
+                return BadRequest("Archivo no válido");
 
-            using var stream = file.OpenReadStream();
+            // Copiamos a MemoryStream para evitar que el stream se cierre 
+            // antes de que el Service pueda leerlo y generar el reporte de error
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms, ct);
+            ms.Position = 0;
 
-            var result = await Mediator.Send(new ImportActivosCommand(stream, file.FileName), ct);
+            var command = new ImportActivosCommand(ms, file.FileName);
+            var result = await Mediator.Send(command, ct);
 
-            return Ok(result);
+            if (!result.Success && result.ErrorFile != null)
+            {
+                return File(
+                    result.ErrorFile,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    $"Errores_{Path.GetFileNameWithoutExtension(file.FileName)}_{DateTime.Now:yyyyMMdd}.xlsx"
+                );
+            }
+
+            return Ok(new { result.Procesados, Mensaje = "Importación exitosa" });
         }
     }
 }
