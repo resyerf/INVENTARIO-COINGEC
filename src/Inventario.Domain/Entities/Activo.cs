@@ -77,6 +77,36 @@ namespace Inventario.Domain.Entities
             };
         }
 
+        public void Update(
+            string nombreEquipo,
+            string? codigoEquipo,
+            Guid categoriaId,
+            decimal costoUnitario,
+            int cantidad,
+            string? marca,
+            string? modelo,
+            string? serie,
+            string? estado,
+            string etiquetado,
+            Guid? ubicacionId,
+            DateTime? fechaAdquisicion)
+        {
+            NombreEquipo = nombreEquipo?.ToUpperInvariant() ?? string.Empty;
+            CodigoEquipo = codigoEquipo?.ToUpperInvariant() ?? string.Empty;
+            CategoriaId = categoriaId;
+            CostoUnitario = costoUnitario;
+            Cantidad = cantidad;
+            Marca = marca?.ToUpperInvariant();
+            Modelo = modelo?.ToUpperInvariant();
+            Serie = serie?.ToUpperInvariant();
+            Estado = estado?.ToUpperInvariant() ?? "BUENO";
+            Etiquetado = etiquetado?.ToUpperInvariant() ?? "-";
+            UbicacionId = ubicacionId;
+            FechaAdquisicion = fechaAdquisicion.HasValue
+                ? DateTime.SpecifyKind(fechaAdquisicion.Value, DateTimeKind.Utc)
+                : null;
+        }
+
         public void SetCustodio(Guid usuarioId)
         {
             this.UsuarioId = usuarioId;

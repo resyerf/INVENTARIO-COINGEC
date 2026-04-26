@@ -7,6 +7,7 @@ using Inventario.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Inventario.Application.Queries.Activos.Export;
 using Inventario.Application.Commands.Activos.Import;
+using Inventario.Application.Commands.Activos.Update;
 
 namespace Inventario.API.Controllers
 {
@@ -19,6 +20,14 @@ namespace Inventario.API.Controllers
             // si tienes configurado el ValidationBehavior en MediatR.
             var result = await Mediator.Send(command, cancellationToken);
 
+            return Ok(result);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateActivoCommand command, CancellationToken cancellationToken)
+        {
+            if (id != command.Id) return BadRequest();
+            var result = await Mediator.Send(command, cancellationToken);
             return Ok(result);
         }
 

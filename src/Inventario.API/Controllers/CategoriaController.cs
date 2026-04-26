@@ -1,5 +1,6 @@
 using Inventario.Application.Commands.Categorias.Create;
 using Inventario.Application.Commands.Categorias.Delete;
+using Inventario.Application.Commands.Categorias.Update;
 using Inventario.Application.DTOs;
 using Inventario.Application.Queries.Categorias.GetList;
 using Inventario.Application.Queries.Categorias.Search;
@@ -16,6 +17,14 @@ namespace Inventario.API.Controllers
             // si tienes configurado el ValidationBehavior en MediatR.
             var result = await Mediator.Send(command, cancellationToken);
 
+            return Ok(result);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateCategoriaCommand command, CancellationToken cancellationToken)
+        {
+            if (id != command.Id) return BadRequest();
+            var result = await Mediator.Send(command, cancellationToken);
             return Ok(result);
         }
 

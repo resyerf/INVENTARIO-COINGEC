@@ -23,6 +23,12 @@ namespace Inventario.Domain.Entities
             };
         }
 
+        public void Update(string nombre, string? descripcion)
+        {
+            Nombre = nombre?.ToUpperInvariant().Trim() ?? string.Empty;
+            Descripcion = descripcion?.ToUpperInvariant();
+        }
+
         /// <summary>
         /// Desactiva la ubicación de forma lógica (borrado lógico)
         /// </summary>

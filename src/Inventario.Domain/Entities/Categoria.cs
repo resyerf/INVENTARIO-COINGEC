@@ -38,6 +38,14 @@ namespace Inventario.Domain.Entities
             );
         }
 
+        public void Update(string codigo, string descripcion, string valores, Guid ubicacionId)
+        {
+            Codigo = codigo?.Trim().ToUpperInvariant() ?? string.Empty;
+            Descripcion = descripcion?.ToUpperInvariant() ?? string.Empty;
+            Valores = string.IsNullOrWhiteSpace(valores) ? string.Empty : valores.Trim().ToUpperInvariant();
+            UbicacionId = ubicacionId;
+        }
+
         /// <summary>
         /// Desactiva la categoría de forma lógica (borrado lógico)
         /// </summary>
