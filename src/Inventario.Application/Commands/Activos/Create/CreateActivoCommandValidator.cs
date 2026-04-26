@@ -7,16 +7,17 @@ namespace Inventario.Application.Activos.Validators
     public sealed class CreateActivoCommandValidator : AbstractValidator<CreateActivoCommand>
     {
         private readonly IActivoRepository _activoRepository;
-        private readonly ISubCategoryRepository _subCategoriaRepository;
+        //private readonly ISubCategoryRepository _subCategoriaRepository;
+        private readonly ICategoriaRepository _categoriaRepository;
         private readonly IUbicacionRepository _ubicacionRepository;
 
         public CreateActivoCommandValidator(
             IActivoRepository activoRepository,
-            ISubCategoryRepository subCategoriaRepository,
+            ICategoriaRepository categoriaRepository,
             IUbicacionRepository ubicacionRepository)
         {
             _activoRepository = activoRepository;
-            _subCategoriaRepository = subCategoriaRepository;
+            _categoriaRepository = categoriaRepository;
             _ubicacionRepository = ubicacionRepository;
 
             // 1. Nombre del equipo obligatorio
@@ -29,15 +30,22 @@ namespace Inventario.Application.Activos.Validators
                 .GreaterThanOrEqualTo(0).WithMessage("La cantidad no puede ser menor a 0.");
 
             // 3. Subcategoría debe existir
-            RuleFor(x => x.SubCategoriaId)
-                .NotEmpty().WithMessage("La subcategoría es obligatoria.")
+            //RuleFor(x => x.SubCategoriaId)
+            //    .NotEmpty().WithMessage("La subcategoría es obligatoria.")
+            //    .MustAsync(async (id, cancellation) =>
+            //    {
+            //        var existe = await _subCategoriaRepository.GetByIdAsync(id, cancellation);
+            //        return existe != null; // Retorna true si existe, false si es null
+            //    })
+            //    .WithMessage("La subcategoría especificada no existe.");
+            RuleFor(x => x.CategoriaId)
+                .NotEmpty().WithMessage("La categoría es obligatoria.")
                 .MustAsync(async (id, cancellation) =>
                 {
-                    var existe = await _subCategoriaRepository.GetByIdAsync(id, cancellation);
+                    var existe = await _categoriaRepository.GetByIdAsync(id, cancellation);
                     return existe != null; // Retorna true si existe, false si es null
                 })
-                .WithMessage("La subcategoría especificada no existe.");
-
+                .WithMessage("La categoría especificada no existe.");
             // 4. Ubicación debe existir (si se proporciona)
             RuleFor(x => x.UbicacionId)
                 .MustAsync(async (id, cancellation) =>

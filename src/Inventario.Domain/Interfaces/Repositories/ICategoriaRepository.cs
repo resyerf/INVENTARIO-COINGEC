@@ -9,5 +9,6 @@ namespace Inventario.Domain.Interfaces.Repositories
         Task<Categoria?> GetByCodeAndUbicacionIdAsync(string code, Guid ubicacionId, CancellationToken cancellationToken = default);
         Task<IReadOnlyList<Categoria>> SearchByTermAsync(string termino, CancellationToken cancellationToken);
         Task<IReadOnlyList<Categoria>> SearchByListCodeAsync(List<string> codes, CancellationToken cancellationToken);
+        Task<IReadOnlyList<Categoria>> GetByListCodeAsync(List<string> codeCategoria, CancellationToken cancellationToken);
     }
 }

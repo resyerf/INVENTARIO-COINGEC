@@ -8,7 +8,7 @@
         string Serie,
         string Etiquetado,
         string Estado,
-        string SubCategoriaNombre,
+        string CategoriaNombre,
         string CategoriaCodigo, // Traído desde la relación del padre
         string UbicacionNombre,
         string Responsable,

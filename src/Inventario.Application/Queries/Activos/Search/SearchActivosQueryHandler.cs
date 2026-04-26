@@ -33,7 +33,7 @@ namespace Inventario.Application.Queries.Activos.Search
                     a.Estado,
                     a.CostoUnitario,
                     a.Observaciones,
-                    a.SubCategoria?.Nombre ?? "",
+                    a.Categoria?.Descripcion ?? "",
                     a.Usuario?.NombreCompleto ?? "",
                     a.Ubicacion?.Nombre ?? "",
                     a.FechaAdquisicion,

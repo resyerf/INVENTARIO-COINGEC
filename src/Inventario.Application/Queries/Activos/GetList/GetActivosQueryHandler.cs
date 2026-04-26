@@ -29,7 +29,7 @@ namespace Inventario.Application.Queries.Activos.GetList
                 a.Estado,
                 a.CostoUnitario,
                 a.Observaciones,
-                a.SubCategoria?.Nombre ?? "Sin Categoria",
+                a.Categoria?.Descripcion ?? "Sin Categoria",
                 a.Usuario != null ? a.Usuario.NombreCompleto : "Sin Asignar",
                 a.Ubicacion?.Nombre ?? "Sin Ubicacion",
                 a.FechaAdquisicion,

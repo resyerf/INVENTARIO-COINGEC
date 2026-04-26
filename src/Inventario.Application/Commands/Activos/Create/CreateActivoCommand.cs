@@ -5,7 +5,8 @@ namespace Inventario.Application.Commands.Activos.Create
     public record CreateActivoCommand(
         string NombreEquipo,
         string CodigoEquipo,
-        Guid SubCategoriaId,
+        //Guid SubCategoriaId,
+        Guid CategoriaId,
         decimal CostoUnitario,
         int Cantidad,
         string? Marca,

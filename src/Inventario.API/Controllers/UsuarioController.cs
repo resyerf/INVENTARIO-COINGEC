@@ -1,6 +1,7 @@
 using Inventario.Application.Commands.Usuarios.Create;
 using Inventario.Application.Commands.Usuarios.Delete;
 using Inventario.Application.Commands.Usuarios.Import;
+using Inventario.Application.Commands.Usuarios.Update;
 using Inventario.Application.Queries.Usuarios.GetList;
 using Inventario.Application.Queries.Usuarios.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,13 @@ namespace Inventario.API.Controllers
             // si tienes configurado el ValidationBehavior en MediatR.
             var result = await Mediator.Send(command, cancellationToken);
 
+            return Ok(result);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateUsuarioCommand command, CancellationToken cancellationToken)
+        {
+            var result = await Mediator.Send(command, cancellationToken);
             return Ok(result);
         }
 

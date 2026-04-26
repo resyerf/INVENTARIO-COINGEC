@@ -21,7 +21,8 @@ namespace Inventario.Application.Commands.Activos.Create
             var activo = Activo.Create(
                 request.NombreEquipo,
                 request.CodigoEquipo,
-                request.SubCategoriaId,
+                //request.SubCategoriaId,
+                request.CategoriaId,
                 request.CostoUnitario,
                 request.Cantidad,
                 request.Marca,

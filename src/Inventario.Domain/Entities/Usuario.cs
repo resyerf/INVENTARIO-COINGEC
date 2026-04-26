@@ -63,6 +63,22 @@ namespace Inventario.Domain.Entities
             return usuario;
         }
 
+        public void Update(
+            string nombreCompleto,
+            string? documentoIdentidad,
+            string? email,
+            string? area,
+            string? cargo,
+            string? sede)
+        {
+            NombreCompleto = nombreCompleto.Trim().ToUpperInvariant();
+            DocumentoIdentidad = documentoIdentidad?.Trim()?.ToUpperInvariant();
+            Email = email?.Trim()?.ToLowerInvariant();
+            Area = area?.Trim()?.ToUpperInvariant();
+            Cargo = cargo?.Trim()?.ToUpperInvariant();
+            Sede = sede?.Trim()?.ToUpperInvariant();
+        }
+
         /// <summary>
         /// Desactiva el usuario de forma lógica (borrado lógico)
         /// </summary>

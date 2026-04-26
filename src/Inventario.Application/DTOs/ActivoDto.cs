@@ -12,7 +12,7 @@ namespace Inventario.Application.DTOs
         string? Estado,
         decimal CostoUnitario,
         string? Observaciones,
-        string SubCategoria,
+        string Categoria,
         string? Custodio,
         string Ubicacion,
         DateTime? FechaAdquisicion,

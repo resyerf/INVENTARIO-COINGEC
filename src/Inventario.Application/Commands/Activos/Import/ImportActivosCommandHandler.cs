@@ -10,7 +10,7 @@ namespace Inventario.Application.Commands.Activos.Import
 {
     internal sealed class ImportActivosCommandHandler(
     IExcelImportService excelService,
-    ISubCategoryRepository subCategoryRepository,
+    ICategoriaRepository categoriaRepository,
     IUbicacionRepository ubicacionRepository,
     IActivoRepository activoRepository,
     IUnitOfWork unitOfWork) : IRequestHandler<ImportActivosCommand, ImportResult>
@@ -40,12 +40,12 @@ namespace Inventario.Application.Commands.Activos.Import
                 .Distinct()
                 .ToList();
 
-            IReadOnlyList<SubCategoria> subCategoriasDb = await subCategoryRepository.GetByCategoriaListCodeAsync(codigosCats!, cancellationToken);
+            IReadOnlyList<Categoria> categoriasDb = await categoriaRepository.GetByListCodeAsync(codigosCats!, cancellationToken);
             IReadOnlyList<Ubicacion> ubicacionesDb = await ubicacionRepository.SearchByListCodeAsync(nombresUbis!, cancellationToken);
             IReadOnlyList<Activo> activosConCodigo = await activoRepository.GetExistingCodesAsync(codigosEquiposExcel!, cancellationToken);
 
-            FrozenDictionary<string, SubCategoria> subCatDict = subCategoriasDb
-                .GroupBy(s => s.Categoria.Codigo.ToUpperInvariant())
+            FrozenDictionary<string, Categoria> catDict = categoriasDb
+                .GroupBy(s => s.Codigo.ToUpperInvariant())
                 .ToFrozenDictionary(g => g.Key, g => g.First());
 
             Dictionary<string, Ubicacion> ubicacionDict = ubicacionesDb.ToDictionary(u => u.Nombre.ToUpperInvariant());
@@ -87,7 +87,7 @@ namespace Inventario.Application.Commands.Activos.Import
                 }
 
                 var tipoKey = item.Tipo?.Trim().ToUpperInvariant();
-                if (string.IsNullOrEmpty(tipoKey) || !subCatDict.TryGetValue(tipoKey, out var subCat))
+                if (string.IsNullOrEmpty(tipoKey) || !catDict.TryGetValue(tipoKey, out var cat))
                 {
                     erroresReporte.Add((excelRow, "Tipo inválido o no existe"));
                     continue;
@@ -115,7 +115,7 @@ namespace Inventario.Application.Commands.Activos.Import
                 nuevosActivos.Add(Activo.Create(
                     item.NombreEquipo,
                     codigoLimpio,
-                    subCat.Id,
+                    cat.Id,
                     item.CostoUnitario ?? 0,
                     item.Cantidad,
                     item.Marca,
@@ -128,12 +128,6 @@ namespace Inventario.Application.Commands.Activos.Import
                 ));
             }
 
-            if (erroresReporte.Count > 0)
-            {
-                byte[] fileError = excelService.GenerateErrorReport<ActivoImportDto>(request.FileStream, erroresReporte);
-                return new ImportResult(false, 0, erroresReporte.Count, fileError);
-            }
-
             if (nuevasUbicaciones.Count > 0)
                 ubicacionRepository.AddRange(nuevasUbicaciones);
 
@@ -141,6 +135,12 @@ namespace Inventario.Application.Commands.Activos.Import
                 activoRepository.AddRange(nuevosActivos);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
+
+            if (erroresReporte.Count > 0)
+            {
+                byte[] fileError = excelService.GenerateErrorReport<ActivoImportDto>(request.FileStream, erroresReporte);
+                return new ImportResult(false, 0, erroresReporte.Count, fileError);
+            }            
 
             return new ImportResult(true, nuevosActivos.Count, 0);
         }

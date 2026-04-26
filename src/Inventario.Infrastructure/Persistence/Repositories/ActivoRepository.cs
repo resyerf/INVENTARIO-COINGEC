@@ -14,8 +14,8 @@ namespace Inventario.Infrastructure.Persistence.Repositories
         public override async Task<Activo?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await DbContext.Activos
-                .Include(a => a.SubCategoria)
-                    .ThenInclude(s => s.Categoria) // Navegación jerárquica
+                .Include(a => a.Categoria)
+                    //.ThenInclude(s => s.Categoria) // Navegación jerárquica
                 .Include(a => a.Usuario)
                 .Include(a => a.Ubicacion)
                 .Include(a => a.Asignaciones)
@@ -33,8 +33,8 @@ namespace Inventario.Infrastructure.Persistence.Repositories
         public async Task<List<Activo>> GetByCategoriaAsync(Guid categoryId, CancellationToken cancellationToken = default)
         {
             return await DbContext.Activos
-                .Where(a => a.SubCategoria.CategoriaId == categoryId)
-                .Include(a => a.SubCategoria)
+                .Where(a => a.CategoriaId == categoryId)
+                //.Include(a => a.SubCategoria)
                 .Include(a => a.Usuario)
                 .ToListAsync(cancellationToken);
         }
@@ -44,7 +44,7 @@ namespace Inventario.Infrastructure.Persistence.Repositories
             return await DbContext.Activos
                 .Where(a => a.UsuarioId == usuarioId)
                 .Include(a => a.Ubicacion)
-                .Include(a => a.SubCategoria)
+                //.Include(a => a.SubCategoria)
                 .ToListAsync(cancellationToken);
         }
 
@@ -53,16 +53,16 @@ namespace Inventario.Infrastructure.Persistence.Repositories
             return await DbContext.Activos
                 .Where(a => a.UbicacionId == ubicacionId)
                 .Include(a => a.Usuario)
-                .Include(a => a.SubCategoria)
-                    .ThenInclude(s => s.Categoria)
+                .Include(a => a.Categoria)
+                    //.ThenInclude(s => s.Categoria)
                 .ToListAsync(cancellationToken);
         }
         public async Task<IReadOnlyList<Activo>> GetAllForReportAsync(CancellationToken ct)
         {
             return await DbContext.Activos
                 .AsNoTracking()
-                .Include(a => a.SubCategoria)
-                    .ThenInclude(s => s.Categoria)
+                .Include(a => a.Categoria)
+                    //.ThenInclude(s => s.Categoria)
                 .Include(a => a.Usuario)
                 .Include(a => a.Ubicacion)
                 .ToListAsync(ct);

@@ -19,14 +19,14 @@ namespace Inventario.Application.Queries.Activos.Reportes
 
             return activos.Select(a => new ActivoReporteDto(
                 a.NombreEquipo,
-                a.CodigoEquipo,
+                a.CodigoEquipo ?? string.Empty,
                 a.Marca ?? "N/A",
                 a.Modelo ?? "N/A",
                 a.Serie ?? "N/A",
                 a.Etiquetado,
                 a.Estado ?? "Nuevo",
-                a.SubCategoria.Nombre,
-                a.SubCategoria.Categoria.Codigo, // Acceso multinivel
+                a.Categoria.Descripcion,
+                a.Categoria.Codigo, // Acceso multinivel
                 a.Ubicacion?.Nombre ?? "Sin Ubicación",
                 a.Usuario?.NombreCompleto ?? "No Asignado",
                 a.CostoUnitario,

@@ -70,9 +70,9 @@ namespace Inventario.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(true);
 
             // Relaciones
-            builder.HasOne(x => x.SubCategoria)
+            builder.HasOne(x => x.Categoria)
                 .WithMany()
-                .HasForeignKey(x => x.SubCategoriaId)
+                .HasForeignKey(x => x.CategoriaId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Usuario).WithMany().HasForeignKey(x => x.UsuarioId).IsRequired(false);

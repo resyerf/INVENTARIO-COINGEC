@@ -23,9 +23,10 @@ namespace Inventario.Domain.Entities
         public bool IsActive { get; private set; } = true;
 
         // Relaciones
-        public Guid SubCategoriaId { get; private set; }
-        public SubCategoria SubCategoria { get; private set; } = null!;
-
+        //public Guid SubCategoriaId { get; private set; }
+        //public SubCategoria SubCategoria { get; private set; } = null!;
+        public Guid CategoriaId { get; private set; }
+        public Categoria Categoria { get; private set; } = null!;
         public Guid? UsuarioId { get; private set; }
         public Usuario? Usuario { get; private set; }
 
@@ -42,7 +43,8 @@ namespace Inventario.Domain.Entities
         public static Activo Create(
             string nombreEquipo,
             string? codigoEquipo,
-            Guid subCategoriaId,
+            //Guid subCategoriaId,
+            Guid categoriaId,
             decimal costoUnitario = 0,
             int cantidad = 1,
             string? marca = null,
@@ -58,7 +60,8 @@ namespace Inventario.Domain.Entities
                 Id = Guid.NewGuid(),
                 NombreEquipo = nombreEquipo?.ToUpperInvariant() ?? string.Empty,
                 CodigoEquipo = codigoEquipo?.ToUpperInvariant() ?? string.Empty,
-                SubCategoriaId = subCategoriaId,
+                //SubCategoriaId = subCategoriaId,
+                CategoriaId = categoriaId,
                 CostoUnitario = costoUnitario,
                 Cantidad = cantidad,
                 Marca = marca?.ToUpperInvariant(),
