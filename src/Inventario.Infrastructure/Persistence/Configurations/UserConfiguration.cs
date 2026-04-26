@@ -21,12 +21,10 @@ namespace Inventario.Infrastructure.Persistence.Configurations
 
             builder.Property(u => u.DocumentoIdentidad)
                 .HasColumnName("document_id")
-                .IsRequired()
                 .HasMaxLength(20);
 
             builder.Property(u => u.Email)
                 .HasColumnName("email")
-                .IsRequired()
                 .HasMaxLength(150);
 
             builder.Property(u => u.Area)
@@ -46,8 +44,11 @@ namespace Inventario.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(true);
 
             // Índice único para evitar documentos duplicados
-            builder.HasIndex(u => u.DocumentoIdentidad).IsUnique();
-            builder.HasIndex(u => u.Email).IsUnique();
+            builder.HasIndex(u => u.DocumentoIdentidad)
+                    .IsUnique()
+                    .HasFilter("\"document_id\" IS NOT NULL AND \"document_id\" <> ''");
+            builder.HasIndex(u => u.Email).IsUnique()
+                .HasFilter("\"email\" IS NOT NULL AND \"email\" <> ''");
 
             // Configuración de la relación con Activos
             builder.HasMany(u => u.ActivosAsignados)

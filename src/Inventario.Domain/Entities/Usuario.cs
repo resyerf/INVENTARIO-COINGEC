@@ -5,9 +5,9 @@ namespace Inventario.Domain.Entities
     public sealed class Usuario : AggregateRoot
     {
         public string NombreCompleto { get; private set; } = string.Empty;
-        public string DocumentoIdentidad { get; private set; } = string.Empty;
-        public string Email { get; private set; } = string.Empty;
-        public string Area { get; private set; } = string.Empty;
+        public string? DocumentoIdentidad { get; private set; } = string.Empty;
+        public string? Email { get; private set; } = string.Empty;
+        public string? Area { get; private set; } = string.Empty;
         public string? Cargo { get; private set; }
         public string? Sede { get; private set; }
         
@@ -23,16 +23,16 @@ namespace Inventario.Domain.Entities
         private Usuario(
             Guid id,
             string nombreCompleto,
-            string documentoIdentidad,
-            string email,
-            string area,
-            string cargo,
-            string sede) : base(id)
+            string? documentoIdentidad,
+            string? email,
+            string? area,
+            string? cargo,
+            string?sede) : base(id)
         {
-            NombreCompleto = nombreCompleto?.ToUpperInvariant() ?? string.Empty;
-            DocumentoIdentidad = documentoIdentidad?.ToUpperInvariant() ?? string.Empty;
-            Email = email; // Mantenemos el formato original
-            Area = area?.ToUpperInvariant() ?? string.Empty;
+            NombreCompleto = nombreCompleto.ToUpperInvariant();
+            DocumentoIdentidad = documentoIdentidad?.ToUpperInvariant();
+            Email = email?.ToUpperInvariant();
+            Area = area?.ToUpperInvariant();
             Cargo = cargo?.ToUpperInvariant();
             Sede = sede?.ToUpperInvariant();
             IsActive = true;
@@ -41,24 +41,20 @@ namespace Inventario.Domain.Entities
         // --- STATIC FACTORY METHOD ---
         public static Usuario Create(
             string nombreCompleto,
-            string documentoIdentidad,
-            string email,
-            string area,
-            string cargo,
-            string sede)
+            string? documentoIdentidad,
+            string? email,
+            string? area,
+            string? cargo,
+            string? sede)
         {
-            // Aquí puedes agregar validaciones de negocio rápidas
-            if (string.IsNullOrWhiteSpace(email))
-                throw new ArgumentException("El email no puede estar vacío.");
-
             var usuario = new Usuario(
                 Guid.NewGuid(),
-                nombreCompleto?.ToUpperInvariant(),
-                documentoIdentidad,
-                email,
-                area?.ToUpperInvariant(),
-                cargo?.ToUpperInvariant(),
-                sede?.ToUpperInvariant()
+                nombreCompleto.Trim().ToUpperInvariant(),
+                documentoIdentidad?.Trim()?.ToUpperInvariant(), // Si es null, queda null
+                email?.Trim()?.ToLowerInvariant(),               // El email suele ir en minúsculas
+                area?.Trim()?.ToUpperInvariant(),
+                cargo?.Trim()?.ToUpperInvariant(),
+                sede?.Trim()?.ToUpperInvariant()
             );
 
             // Ejemplo: Si quisieras disparar un evento cuando se crea un usuario

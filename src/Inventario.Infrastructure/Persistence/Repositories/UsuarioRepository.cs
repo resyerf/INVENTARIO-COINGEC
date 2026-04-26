@@ -56,4 +56,12 @@ public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
 
         return await query.Take(10).ToListAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyList<Usuario>> GetByDocumentNbrListAsync(List<string> documents, CancellationToken cancellationToken = default)
+    {
+        return await DbContext.Usuarios
+            .AsNoTracking()
+            .Where(u => !string.IsNullOrEmpty(u.DocumentoIdentidad) && documents.Contains(u.DocumentoIdentidad))
+            .ToListAsync(cancellationToken);
+    }
 }

@@ -1,5 +1,6 @@
 using Inventario.Application.Commands.Usuarios.Create;
 using Inventario.Application.Commands.Usuarios.Delete;
+using Inventario.Application.Commands.Usuarios.Import;
 using Inventario.Application.Queries.Usuarios.GetList;
 using Inventario.Application.Queries.Usuarios.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,31 @@ namespace Inventario.API.Controllers
         {
             await Mediator.Send(new DeleteUsuarioCommand(id), cancellationToken);
             return NoContent();
+        }
+
+        [HttpPost("import")]
+        public async Task<IActionResult> Import(IFormFile file, CancellationToken ct)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Archivo no válido");
+            using var ms = new MemoryStream();
+
+            await file.CopyToAsync(ms, ct);
+            ms.Position = 0;
+
+            var command = new ImportUsuariosCommand(ms, file.FileName);
+            var result = await Mediator.Send(command, ct);
+
+            if (!result.Success && result.ErrorFile != null)
+            {
+                return File(
+                    result.ErrorFile,
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    $"Errores_{Path.GetFileNameWithoutExtension(file.FileName)}_{DateTime.Now:yyyyMMdd}.xlsx"
+                );
+            }
+
+            return Ok(new { result.Procesados, Mensaje = "Importación exitosa" });
         }
     }
 }

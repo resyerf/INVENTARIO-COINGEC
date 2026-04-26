@@ -3,6 +3,7 @@ using System;
 using Inventario.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Inventario.Infrastructure.Migrations
 {
     [DbContext(typeof(InventarioDbContext))]
-    partial class InventarioDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260426003138_RefactorActivoFinal7")]
+    partial class RefactorActivoFinal7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -365,11 +368,11 @@ namespace Inventario.Infrastructure.Migrations
 
                     b.HasIndex("DocumentoIdentidad")
                         .IsUnique()
-                        .HasFilter("\"document_id\" IS NOT NULL AND \"document_id\" <> ''");
+                        .HasFilter("\"document_id\" IS NOT NULL");
 
                     b.HasIndex("Email")
                         .IsUnique()
-                        .HasFilter("\"email\" IS NOT NULL AND \"email\" <> ''");
+                        .HasFilter("\"email\" IS NOT NULL");
 
                     b.ToTable("users", (string)null);
                 });

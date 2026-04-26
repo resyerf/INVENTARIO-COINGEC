@@ -40,7 +40,7 @@ namespace Inventario.Application.Commands.Activos.Import
                 .Distinct()
                 .ToList();
 
-            IReadOnlyList<SubCategoria> subCategoriasDb = await subCategoryRepository.GetByCategoriaByListCodeAsync(codigosCats!, cancellationToken);
+            IReadOnlyList<SubCategoria> subCategoriasDb = await subCategoryRepository.GetByCategoriaListCodeAsync(codigosCats!, cancellationToken);
             IReadOnlyList<Ubicacion> ubicacionesDb = await ubicacionRepository.SearchByListCodeAsync(nombresUbis!, cancellationToken);
             IReadOnlyList<Activo> activosConCodigo = await activoRepository.GetExistingCodesAsync(codigosEquiposExcel!, cancellationToken);
 

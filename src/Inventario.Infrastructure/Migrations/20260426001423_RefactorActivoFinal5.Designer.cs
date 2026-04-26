@@ -3,6 +3,7 @@ using System;
 using Inventario.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Inventario.Infrastructure.Migrations
 {
     [DbContext(typeof(InventarioDbContext))]
-    partial class InventarioDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260426001423_RefactorActivoFinal5")]
+    partial class RefactorActivoFinal5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -335,6 +338,7 @@ namespace Inventario.Infrastructure.Migrations
                         .HasColumnName("job_title");
 
                     b.Property<string>("DocumentoIdentidad")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
                         .HasColumnName("document_id");
@@ -364,12 +368,10 @@ namespace Inventario.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DocumentoIdentidad")
-                        .IsUnique()
-                        .HasFilter("\"document_id\" IS NOT NULL AND \"document_id\" <> ''");
+                        .IsUnique();
 
                     b.HasIndex("Email")
-                        .IsUnique()
-                        .HasFilter("\"email\" IS NOT NULL AND \"email\" <> ''");
+                        .IsUnique();
 
                     b.ToTable("users", (string)null);
                 });

@@ -30,7 +30,7 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<IReadOnlyList<SubCategoria>> GetByCategoriaByListCodeAsync(List<string> codeCategoria, CancellationToken cancellationToken)
+        public async Task<IReadOnlyList<SubCategoria>> GetByCategoriaListCodeAsync(List<string> codeCategoria, CancellationToken cancellationToken)
         {
             if (codeCategoria == null || !codeCategoria.Any())
                 return new List<SubCategoria>();
