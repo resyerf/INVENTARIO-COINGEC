@@ -1,22 +1,25 @@
+using Inventario.Application.Common.Models;
 using Inventario.Domain.Interfaces.Repositories;
+using Inventario.Domain.Primitives;
 using MediatR;
 namespace Inventario.Application.Commands.Ubicaciones.Delete
 {
-    internal sealed class DeleteUbicacionCommandHandler : IRequestHandler<DeleteUbicacionCommand>
+    internal sealed class DeleteUbicacionCommandHandler : IRequestHandler<DeleteUbicacionCommand, Result>
     {
         private readonly IUbicacionRepository _repository;
-        private readonly Inventario.Domain.Primitives.IUnitOfWork _unitOfWork;
-        public DeleteUbicacionCommandHandler(IUbicacionRepository repository, Inventario.Domain.Primitives.IUnitOfWork unitOfWork)
+        private readonly IUnitOfWork _unitOfWork;
+        public DeleteUbicacionCommandHandler(IUbicacionRepository repository, IUnitOfWork unitOfWork)
         {
-            _repository = repository;
-            _unitOfWork = unitOfWork;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
-        public async Task Handle(DeleteUbicacionCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(DeleteUbicacionCommand request, CancellationToken cancellationToken)
         {
             var entity = await _repository.GetByIdAsync(request.Id, cancellationToken);
-            if (entity == null) throw new Exception("Ubicación no encontrada.");
+            if (entity == null) return Result.Failure("Ubicación no encontrada.");
             entity.Deactivate();
             await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return Result.Success();
         }
     }
 }

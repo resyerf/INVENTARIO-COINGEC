@@ -1,11 +1,12 @@
-﻿using Inventario.Domain.Entities;
+using Inventario.Application.Common.Models;
+using Inventario.Domain.Entities;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
 using MediatR;
 
 namespace Inventario.Application.Commands.Activos.Create
 {
-    internal sealed class CreateActivoCommandHandler : IRequestHandler<CreateActivoCommand, Guid>
+    internal sealed class CreateActivoCommandHandler : IRequestHandler<CreateActivoCommand, Result<Guid>>
     {
         private readonly IActivoRepository _activoRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -16,7 +17,7 @@ namespace Inventario.Application.Commands.Activos.Create
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task<Guid> Handle(CreateActivoCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(CreateActivoCommand request, CancellationToken cancellationToken)
         {
             var activo = Activo.Create(
                 request.NombreEquipo,
@@ -40,7 +41,7 @@ namespace Inventario.Application.Commands.Activos.Create
             // 3. Guardar cambios a través de Unit of Work
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return activo.Id;
+            return Result<Guid>.Success(activo.Id);
         }
     }
 }

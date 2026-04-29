@@ -1,5 +1,6 @@
+using Inventario.Application.Common.Models;
 using MediatR;
 namespace Inventario.Application.Commands.SubCategorias.Delete
 {
-    public record DeleteSubCategoriaCommand(Guid Id) : IRequest;
+    public record DeleteSubCategoriaCommand(Guid Id) : IRequest<Result>;
 }

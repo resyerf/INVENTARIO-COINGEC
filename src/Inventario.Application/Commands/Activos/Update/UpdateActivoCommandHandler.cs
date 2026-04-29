@@ -1,10 +1,11 @@
+using Inventario.Application.Common.Models;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
 using MediatR;
 
 namespace Inventario.Application.Commands.Activos.Update
 {
-    internal sealed class UpdateActivoCommandHandler : IRequestHandler<UpdateActivoCommand, Unit>
+    internal sealed class UpdateActivoCommandHandler : IRequestHandler<UpdateActivoCommand, Result>
     {
         private readonly IActivoRepository _activoRepository;
         private readonly ICategoriaRepository _categoriaRepository;
@@ -17,24 +18,24 @@ namespace Inventario.Application.Commands.Activos.Update
             IUbicacionRepository ubicacionRepository,
             IUnitOfWork unitOfWork)
         {
-            _activoRepository = activoRepository;
-            _categoriaRepository = categoriaRepository;
-            _ubicacionRepository = ubicacionRepository;
-            _unitOfWork = unitOfWork;
+            _activoRepository = activoRepository ?? throw new ArgumentNullException(nameof(activoRepository));
+            _categoriaRepository = categoriaRepository ?? throw new ArgumentNullException(nameof(categoriaRepository));
+            _ubicacionRepository = ubicacionRepository ?? throw new ArgumentNullException(nameof(ubicacionRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task<Unit> Handle(UpdateActivoCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(UpdateActivoCommand request, CancellationToken cancellationToken)
         {
             var activo = await _activoRepository.GetByIdAsync(request.Id, cancellationToken);
             if (activo is null)
             {
-                throw new Exception($"El activo con ID {request.Id} no existe.");
+                return Result.Failure($"El activo con ID {request.Id} no existe.");
             }
 
             var categoria = await _categoriaRepository.GetByIdAsync(request.CategoriaId, cancellationToken);
             if (categoria is null)
             {
-                throw new Exception("La categoría especificada no existe.");
+                return Result.Failure("La categoría especificada no existe.");
             }
 
             if (request.UbicacionId.HasValue)
@@ -42,7 +43,7 @@ namespace Inventario.Application.Commands.Activos.Update
                 var ubicacion = await _ubicacionRepository.GetByIdAsync(request.UbicacionId.Value, cancellationToken);
                 if (ubicacion is null)
                 {
-                    throw new Exception("La ubicación especificada no existe.");
+                    return Result.Failure("La ubicación especificada no existe.");
                 }
             }
 
@@ -64,7 +65,7 @@ namespace Inventario.Application.Commands.Activos.Update
             _activoRepository.Update(activo);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            return Result.Success();
         }
     }
 }

@@ -1,3 +1,4 @@
+using Inventario.Application.Common.Models;
 using MediatR;
 
 namespace Inventario.Application.Commands.Activos.Update
@@ -15,5 +16,5 @@ namespace Inventario.Application.Commands.Activos.Update
         string? Estado,
         string Etiquetado,
         Guid? UbicacionId,
-        DateTime? FechaAdquisicion) : IRequest<Unit>;
+        DateTime? FechaAdquisicion) : IRequest<Result>;
 }

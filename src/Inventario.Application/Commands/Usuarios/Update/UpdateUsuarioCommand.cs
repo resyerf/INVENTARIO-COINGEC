@@ -1,3 +1,4 @@
+using Inventario.Application.Common.Models;
 using MediatR;
 
 namespace Inventario.Application.Commands.Usuarios.Update
@@ -9,5 +10,5 @@ namespace Inventario.Application.Commands.Usuarios.Update
     string Email,
     string Area, // TI, Contabilidad, Operaciones
     string Cargo,
-    string Sede) : IRequest<Guid>;
+    string Sede) : IRequest<Result<Guid>>;
 }

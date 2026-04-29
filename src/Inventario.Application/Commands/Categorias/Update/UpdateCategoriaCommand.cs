@@ -1,5 +1,7 @@
 using MediatR;
 
+using Inventario.Application.Common.Models;
+
 namespace Inventario.Application.Commands.Categorias.Update
 {
     public record UpdateCategoriaCommand(
@@ -7,5 +9,5 @@ namespace Inventario.Application.Commands.Categorias.Update
         string Codigo,
         string Descripcion,
         string Valores,
-        Guid UbicacionId) : IRequest<Unit>;
+        Guid UbicacionId) : IRequest<Result>;
 }

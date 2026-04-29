@@ -20,7 +20,7 @@ namespace Inventario.API.Controllers
             CancellationToken cancellationToken = default)
         {
             var result = await Mediator.Send(new GetAsignacionesQuery(page, pageSize, searchTerm), cancellationToken);
-            return Ok(result);
+            return HandleResult(result);
         }
 
         [HttpPost]
@@ -28,7 +28,7 @@ namespace Inventario.API.Controllers
         {
             // El resultado es el Guid de la nueva asignación
             var result = await Mediator.Send(command, cancellationToken);
-            return Ok(result);
+            return HandleResult(result);
         }
 
         [HttpPatch("{id:guid}/finalizar")]
@@ -41,14 +41,14 @@ namespace Inventario.API.Controllers
                 request.Observaciones
             );
 
-            await Mediator.Send(command, cancellationToken);
-            return NoContent();
+            var result = await Mediator.Send(command, cancellationToken);
+            return HandleResult(result);
         }
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            await Mediator.Send(new DeleteAsignacionCommand(id), cancellationToken);
-            return NoContent();
+            var result = await Mediator.Send(new DeleteAsignacionCommand(id), cancellationToken);
+            return HandleResult(result);
         }
     }
     

@@ -1,4 +1,5 @@
-﻿using MediatR;
+using Inventario.Application.Common.Models;
+using MediatR;
 
 namespace Inventario.Application.Commands.Asignaciones.Asignar
 {
@@ -6,5 +7,5 @@ namespace Inventario.Application.Commands.Asignaciones.Asignar
         Guid UsuarioId,
         DateTime FechaAsignacion,
         string? Observaciones
-    ) : IRequest<Guid>; // Retorna el ID de la Asignación creada
+    ) : IRequest<Result<Guid>>; // Retorna el ID de la Asignación creada
 }

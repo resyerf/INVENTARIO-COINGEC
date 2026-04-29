@@ -1,3 +1,4 @@
+using Inventario.Application.Common.Models;
 using Inventario.Domain.Entities;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
@@ -5,7 +6,7 @@ using MediatR;
 
 namespace Inventario.Application.Commands.Asignaciones.Asignar
 {
-    internal sealed class AsignacionActivoCommandHandler : IRequestHandler<AsignacionActivoCommand, Guid>
+    internal sealed class AsignacionActivoCommandHandler : IRequestHandler<AsignacionActivoCommand, Result<Guid>>
     {
         private readonly IActivoRepository _activoRepository;
         private readonly IAsignacionRepository _asignacionRepository;
@@ -17,18 +18,18 @@ namespace Inventario.Application.Commands.Asignaciones.Asignar
             _asignacionRepository = asignacionRepository ?? throw new ArgumentNullException(nameof(asignacionRepository));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
-        public async Task<Guid> Handle(AsignacionActivoCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(AsignacionActivoCommand request, CancellationToken cancellationToken)
         {
             // 1. Obtener el activo (con sus asignaciones actuales para validar)
             var activo = await _activoRepository.GetByIdAsync(request.ActivoId, cancellationToken);
 
             if (activo == null)
-                throw new Exception("El activo no existe.");
+                return Result<Guid>.Failure("El activo no existe.");
 
             // Validar que el activo no esté ya asignado
             if (activo.UsuarioId.HasValue)
             {
-                throw new Exception($"El activo seleccionado ya se encuentra asignado actualmente.");
+                return Result<Guid>.Failure($"El activo seleccionado ya se encuentra asignado actualmente.");
             }
 
             // 2. Lógica de Dominio: Crear la asignación
@@ -50,7 +51,7 @@ namespace Inventario.Application.Commands.Asignaciones.Asignar
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return asignacion.Id;
+            return Result<Guid>.Success(asignacion.Id);
         }
     }
 }

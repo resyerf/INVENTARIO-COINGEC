@@ -1,3 +1,4 @@
+using Inventario.Application.Common.Models;
 using Inventario.Application.Common.Pagination;
 using Inventario.Application.DTOs;
 using MediatR;
@@ -12,5 +13,5 @@ namespace Inventario.Application.Queries.Activos.GetList
         bool? IsActive,
         string? Categoria,
         string? Custodio
-    ) : IRequest<PagedResult<ActivoDto>>;
+    ) : IRequest<Result<PagedResult<ActivoDto>>>;
 }

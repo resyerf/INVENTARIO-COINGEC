@@ -2,6 +2,7 @@ using Inventario.API;
 using Inventario.API.Extensions;
 using Inventario.Application;
 using Inventario.Infrastructure;
+using Inventario.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,13 @@ builder.Services
     .AddInfrastructure(builder.Configuration)
     .AddApplication();
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
+
+app.UseExceptionHandler();
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {

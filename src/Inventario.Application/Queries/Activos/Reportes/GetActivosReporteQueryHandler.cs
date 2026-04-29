@@ -1,10 +1,11 @@
-﻿using Inventario.Application.DTOs;
+using Inventario.Application.Common.Models;
+using Inventario.Application.DTOs;
 using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace Inventario.Application.Queries.Activos.Reportes
 {
-    internal sealed class GetActivosReporteQueryHandler : IRequestHandler<GetActivosReporteQuery, IReadOnlyList<ActivoReporteDto>>
+    internal sealed class GetActivosReporteQueryHandler : IRequestHandler<GetActivosReporteQuery, Result<IReadOnlyList<ActivoReporteDto>>>
     {
         private readonly IActivoRepository _repository;
 
@@ -12,12 +13,12 @@ namespace Inventario.Application.Queries.Activos.Reportes
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
-        public async Task<IReadOnlyList<ActivoReporteDto>> Handle(GetActivosReporteQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IReadOnlyList<ActivoReporteDto>>> Handle(GetActivosReporteQuery request, CancellationToken cancellationToken)
         {
             // Consultamos al repositorio (asegúrate que el repo incluya las relaciones)
             var activos = await _repository.GetAllForReportAsync(cancellationToken);
 
-            return activos.Select(a => new ActivoReporteDto(
+            return Result<IReadOnlyList<ActivoReporteDto>>.Success(activos.Select(a => new ActivoReporteDto(
                 a.NombreEquipo,
                 a.CodigoEquipo ?? string.Empty,
                 a.Marca ?? "N/A",
@@ -32,7 +33,7 @@ namespace Inventario.Application.Queries.Activos.Reportes
                 a.CostoUnitario,
                 a.Cantidad,
                 a.FechaAdquisicion?.ToString("dd/MM/yyyy") ?? "S/N"
-            )).ToList().AsReadOnly();
+            )).ToList().AsReadOnly());
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿
+
+using Inventario.Application.Common.Models;
 using MediatR;
 
 namespace Inventario.Application.Commands.Asignaciones.FinalizarAsignacion
@@ -7,5 +8,5 @@ namespace Inventario.Application.Commands.Asignaciones.FinalizarAsignacion
         Guid AsignacionId,
         string EstadoRecibido,
         string? Observaciones
-    ) : IRequest<Unit>;
+    ) : IRequest<Result>;
 }

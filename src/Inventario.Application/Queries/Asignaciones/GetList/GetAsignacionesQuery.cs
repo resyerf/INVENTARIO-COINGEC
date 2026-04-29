@@ -1,3 +1,4 @@
+using Inventario.Application.Common.Models;
 using Inventario.Application.Common.Pagination;
 using Inventario.Application.DTOs;
 using MediatR;
@@ -8,5 +9,5 @@ namespace Inventario.Application.Queries.Asignaciones.GetList
         int Page = 1,
         int PageSize = 10,
         string? SearchTerm = null
-    ) : IRequest<PagedResult<AsignacionDto>>;
+    ) : IRequest<Result<PagedResult<AsignacionDto>>>;
 }

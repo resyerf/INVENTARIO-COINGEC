@@ -1,10 +1,11 @@
+using Inventario.Application.Common.Models;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
 using MediatR;
 
 namespace Inventario.Application.Commands.Ubicaciones.Update
 {
-    internal sealed class UpdateUbicacionCommandHandler : IRequestHandler<UpdateUbicacionCommand, Unit>
+    internal sealed class UpdateUbicacionCommandHandler : IRequestHandler<UpdateUbicacionCommand, Result>
     {
         private readonly IUbicacionRepository _ubicacionRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -13,16 +14,16 @@ namespace Inventario.Application.Commands.Ubicaciones.Update
             IUbicacionRepository ubicacionRepository,
             IUnitOfWork unitOfWork)
         {
-            _ubicacionRepository = ubicacionRepository;
-            _unitOfWork = unitOfWork;
+            _ubicacionRepository = ubicacionRepository ?? throw new ArgumentNullException(nameof(ubicacionRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task<Unit> Handle(UpdateUbicacionCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(UpdateUbicacionCommand request, CancellationToken cancellationToken)
         {
             var ubicacion = await _ubicacionRepository.GetByIdAsync(request.Id, cancellationToken);
             if (ubicacion is null)
             {
-                throw new Exception($"La ubicación con ID {request.Id} no existe.");
+                return Result.Failure($"La ubicación con ID {request.Id} no existe.");
             }
 
             ubicacion.Update(
@@ -33,7 +34,7 @@ namespace Inventario.Application.Commands.Ubicaciones.Update
             _ubicacionRepository.Update(ubicacion);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            return Result.Success();
         }
     }
 }

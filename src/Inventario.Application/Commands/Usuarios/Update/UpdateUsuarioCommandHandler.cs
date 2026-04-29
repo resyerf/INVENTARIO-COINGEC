@@ -1,11 +1,11 @@
-using Inventario.Domain.Entities;
+using Inventario.Application.Common.Models;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
 using MediatR;
 
 namespace Inventario.Application.Commands.Usuarios.Update
 {
-    internal sealed class UpdateUsuarioCommandHandler : IRequestHandler<UpdateUsuarioCommand, Guid>
+    internal sealed class UpdateUsuarioCommandHandler : IRequestHandler<UpdateUsuarioCommand, Result<Guid>>
     {
         private readonly IUsuarioRepository _usuarioRepository;
         private readonly IUnitOfWork _unitOfWork;
@@ -14,17 +14,17 @@ namespace Inventario.Application.Commands.Usuarios.Update
             IUsuarioRepository usuarioRepository,
             IUnitOfWork unitOfWork)
         {
-            _usuarioRepository = usuarioRepository;
-            _unitOfWork = unitOfWork;
+            _usuarioRepository = usuarioRepository ?? throw new ArgumentNullException(nameof(usuarioRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task<Guid> Handle(UpdateUsuarioCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(UpdateUsuarioCommand request, CancellationToken cancellationToken)
         {
             var usuario = await _usuarioRepository.GetByIdAsync(request.Id);
 
             if (usuario == null)
             {
-                throw new KeyNotFoundException($"No se encontró el usuario con ID {request.Id}");
+                return Result<Guid>.Failure($"No se encontró el usuario con ID {request.Id}");
             }
 
             usuario.Update(
@@ -39,7 +39,7 @@ namespace Inventario.Application.Commands.Usuarios.Update
             _usuarioRepository.Update(usuario);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return usuario.Id;
+            return Result<Guid>.Success(usuario.Id);
         }
     }
 }

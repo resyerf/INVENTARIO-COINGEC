@@ -14,7 +14,7 @@ namespace Inventario.API.Controllers
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new SearchUbicacionesQuery(string.Empty), cancellationToken);
-            return Ok(result);
+            return HandleResult(result);
         }
 
         [HttpGet("search")]
@@ -22,7 +22,7 @@ namespace Inventario.API.Controllers
         public async Task<IActionResult> Search([FromQuery] string termino, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new SearchUbicacionesQuery(termino), cancellationToken);
-            return Ok(result);
+            return HandleResult(result);
         }
 
         [HttpPost]
@@ -31,8 +31,7 @@ namespace Inventario.API.Controllers
             // El validador de FluentValidation se ejecuta automáticamente antes de entrar aquí 
             // si tienes configurado el ValidationBehavior en MediatR.
             var result = await Mediator.Send(command, cancellationToken);
-
-            return Ok(result);
+            return HandleResult(result);
         }
 
         [HttpPut("{id:guid}")]
@@ -40,13 +39,13 @@ namespace Inventario.API.Controllers
         {
             if (id != command.Id) return BadRequest();
             var result = await Mediator.Send(command, cancellationToken);
-            return Ok(result);
+            return HandleResult(result);
         }
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            await Mediator.Send(new DeleteUbicacionCommand(id), cancellationToken);
-            return NoContent();
+            var result = await Mediator.Send(new DeleteUbicacionCommand(id), cancellationToken);
+            return HandleResult(result);
         }
     }
 }

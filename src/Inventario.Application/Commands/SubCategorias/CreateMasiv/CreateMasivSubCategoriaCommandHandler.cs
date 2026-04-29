@@ -1,11 +1,12 @@
-﻿using Inventario.Domain.Entities;
+using Inventario.Application.Common.Models;
+using Inventario.Domain.Entities;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
 using MediatR;
 
 namespace Inventario.Application.Commands.SubCategorias.CreateMasiv
 {
-    internal sealed class CreateMasivSubCategoriaCommandHandler : IRequestHandler<CreateMasivSubCategoriaCommand, Unit>
+    internal sealed class CreateMasivSubCategoriaCommandHandler : IRequestHandler<CreateMasivSubCategoriaCommand, Result>
     {
         private readonly ICategoriaRepository _categoriaRepository;
         private readonly ISubCategoryRepository _subCategoryRepository;
@@ -18,13 +19,13 @@ namespace Inventario.Application.Commands.SubCategorias.CreateMasiv
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task<Unit> Handle(CreateMasivSubCategoriaCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(CreateMasivSubCategoriaCommand request, CancellationToken cancellationToken)
         {
             var category = await _categoriaRepository.GetByIdAsync(request.categoriaId);
 
             if (category is null)
             {
-                throw new Exception($"El código {request.categoriaId} no existe");
+                return Result.Failure($"El código {request.categoriaId} no existe");
             }
 
             var nombres = request.nombres
@@ -47,7 +48,7 @@ namespace Inventario.Application.Commands.SubCategorias.CreateMasiv
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
 
-            return Unit.Value;
+            return Result.Success();
         }
     }
 }

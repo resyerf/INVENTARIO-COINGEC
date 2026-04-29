@@ -1,10 +1,11 @@
+using Inventario.Application.Common.Models;
 using Inventario.Application.Common.Pagination;
 using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace Inventario.Application.Queries.Usuarios.GetList
 {
-    internal sealed class GetUsuarioQueryHandler : IRequestHandler<GetUsuariosQuery, PagedResult<UsuarioDto>>
+    internal sealed class GetUsuarioQueryHandler : IRequestHandler<GetUsuariosQuery, Result<PagedResult<UsuarioDto>>>
     {
         private readonly IUsuarioRepository _usuarioRepository;
 
@@ -13,7 +14,7 @@ namespace Inventario.Application.Queries.Usuarios.GetList
             _usuarioRepository = usuarioRepository ?? throw new ArgumentNullException(nameof(usuarioRepository));
         }
 
-        public async Task<PagedResult<UsuarioDto>> Handle(GetUsuariosQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedResult<UsuarioDto>>> Handle(GetUsuariosQuery request, CancellationToken cancellationToken)
         {
             var (items, totalCount) = await _usuarioRepository.GetPagedUsuariosAsync(
                 request.Page, 
@@ -33,7 +34,7 @@ namespace Inventario.Application.Queries.Usuarios.GetList
                 Format(u.Sede, "SIN SEDE"),
                 u.IsActive)).ToList().AsReadOnly();
 
-            return new PagedResult<UsuarioDto>(dtos, totalCount, request.Page, request.PageSize);
+            return Result<PagedResult<UsuarioDto>>.Success(new PagedResult<UsuarioDto>(dtos, totalCount, request.Page, request.PageSize));
         }
     }
 }

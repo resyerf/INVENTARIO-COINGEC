@@ -24,7 +24,7 @@ namespace Inventario.API.Controllers
         public async Task<IActionResult> GetDashboardStats(CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new GetDashboardStatsQuery(), cancellationToken);
-            return Ok(result);
+            return HandleResult(result);
         }
     }
 }

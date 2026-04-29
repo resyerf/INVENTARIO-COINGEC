@@ -1,10 +1,11 @@
-﻿using Inventario.Domain.Interfaces.Repositories;
+using Inventario.Application.Common.Models;
+using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
 using MediatR;
 
 namespace Inventario.Application.Commands.Asignaciones.FinalizarAsignacion
 {
-    internal sealed class FinalizarAsignacionCommandHandler : IRequestHandler<FinalizarAsignacionCommand, Unit>
+    internal sealed class FinalizarAsignacionCommandHandler : IRequestHandler<FinalizarAsignacionCommand, Result>
     {
         private readonly IAsignacionRepository _asignacionRepository;
         private readonly IActivoRepository _activoRepository;
@@ -15,21 +16,21 @@ namespace Inventario.Application.Commands.Asignaciones.FinalizarAsignacion
             IActivoRepository activoRepository,
             IUnitOfWork unitOfWork)
         {
-            _asignacionRepository = asignacionRepository;
-            _activoRepository = activoRepository;
-            _unitOfWork = unitOfWork;
+            _asignacionRepository = asignacionRepository ?? throw new ArgumentNullException(nameof(asignacionRepository));
+            _activoRepository = activoRepository ?? throw new ArgumentNullException(nameof(activoRepository));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task<Unit> Handle(FinalizarAsignacionCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(FinalizarAsignacionCommand request, CancellationToken cancellationToken)
         {
             // 1. Buscar la asignación activa
             var asignacion = await _asignacionRepository.GetByIdAsync(request.AsignacionId, cancellationToken);
 
             if (asignacion == null)
-                throw new Exception("La asignación no existe.");
+                return Result.Failure("La asignación no existe.");
 
             if (asignacion.FechaDevolucion.HasValue)
-                throw new Exception("Esta asignación ya fue finalizada anteriormente.");
+                return Result.Failure("Esta asignación ya fue finalizada anteriormente.");
 
             // 2. Usar el método de comportamiento de la entidad para cerrar el historial
             asignacion.FinalizarAsignacion(request.EstadoRecibido, request.Observaciones);
@@ -43,7 +44,7 @@ namespace Inventario.Application.Commands.Asignaciones.FinalizarAsignacion
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            return Result.Success();
         }
     }
 }

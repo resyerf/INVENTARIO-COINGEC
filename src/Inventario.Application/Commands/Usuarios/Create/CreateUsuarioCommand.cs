@@ -1,4 +1,5 @@
-﻿using MediatR;
+using Inventario.Application.Common.Models;
+using MediatR;
 
 namespace Inventario.Application.Commands.Usuarios.Create
 {
@@ -9,5 +10,5 @@ namespace Inventario.Application.Commands.Usuarios.Create
     string Area, // TI, Contabilidad, Operaciones
     string Cargo,
     string Sede,
-    string CreadoPor) : IRequest<Guid>;
+    string CreadoPor) : IRequest<Result<Guid>>;
 }

@@ -1,3 +1,4 @@
+using Inventario.Application.Common.Models;
 using Inventario.Application.Common.Pagination;
 using Inventario.Application.DTOs;
 using Inventario.Domain.Interfaces.Repositories;
@@ -5,7 +6,7 @@ using MediatR;
 
 namespace Inventario.Application.Queries.Activos.GetList
 {
-    internal sealed class GetActivosQueryHandler : IRequestHandler<GetActivosQuery, PagedResult<ActivoDto>>
+    internal sealed class GetActivosQueryHandler : IRequestHandler<GetActivosQuery, Result<PagedResult<ActivoDto>>>
     {
         private readonly IActivoRepository _activoRepository;
 
@@ -14,7 +15,7 @@ namespace Inventario.Application.Queries.Activos.GetList
             _activoRepository = activoRepository ?? throw new ArgumentNullException(nameof(activoRepository));
         }
 
-        public async Task<PagedResult<ActivoDto>> Handle(GetActivosQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedResult<ActivoDto>>> Handle(GetActivosQuery request, CancellationToken cancellationToken)
         {
             var (items, totalCount) = await _activoRepository.GetPagedActivosAsync(
                 request.Page,
@@ -45,7 +46,7 @@ namespace Inventario.Application.Queries.Activos.GetList
                 a.IsActive
             )).ToList().AsReadOnly();
 
-            return new PagedResult<ActivoDto>(dtos, totalCount, request.Page, request.PageSize);
+            return Result<PagedResult<ActivoDto>>.Success(new PagedResult<ActivoDto>(dtos, totalCount, request.Page, request.PageSize));
         }
     }
 }

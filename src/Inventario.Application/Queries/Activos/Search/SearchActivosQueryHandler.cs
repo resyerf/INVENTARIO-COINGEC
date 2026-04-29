@@ -1,10 +1,11 @@
+using Inventario.Application.Common.Models;
 using Inventario.Application.DTOs;
 using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace Inventario.Application.Queries.Activos.Search
 {
-    internal sealed class SearchActivosQueryHandler : IRequestHandler<SearchActivosQuery, IReadOnlyList<ActivoDto>>
+    internal sealed class SearchActivosQueryHandler : IRequestHandler<SearchActivosQuery, Result<IReadOnlyList<ActivoDto>>>
     {
         private readonly IActivoRepository _repository;
 
@@ -13,14 +14,14 @@ namespace Inventario.Application.Queries.Activos.Search
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<IReadOnlyList<ActivoDto>> Handle(SearchActivosQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IReadOnlyList<ActivoDto>>> Handle(SearchActivosQuery request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(request.Termino)) return new List<ActivoDto>().AsReadOnly();
+            if (string.IsNullOrWhiteSpace(request.Termino)) return Result<IReadOnlyList<ActivoDto>>.Success(new List<ActivoDto>().AsReadOnly());
 
             // Obtener todos los activos y filtrar por término si se proporciona
             var activos = await _repository.GetBySearchTermAsync(request.Termino ,cancellationToken);
 
-            return activos
+            return Result<IReadOnlyList<ActivoDto>>.Success(activos
                 .Select(a => new ActivoDto(
                     a.Id,
                     a.NombreEquipo,
@@ -39,7 +40,7 @@ namespace Inventario.Application.Queries.Activos.Search
                     a.FechaAdquisicion,
                     a.IsActive))
                 .ToList()
-                .AsReadOnly();
+                .AsReadOnly());
         }
     }
 }

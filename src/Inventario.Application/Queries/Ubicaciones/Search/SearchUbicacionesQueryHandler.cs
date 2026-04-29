@@ -1,10 +1,11 @@
+using Inventario.Application.Common.Models;
 using Inventario.Application.DTOs;
 using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace Inventario.Application.Queries.Ubicaciones.Search
 {
-    internal sealed class SearchUbicacionesQueryHandler : IRequestHandler<SearchUbicacionesQuery, IReadOnlyList<UbicacionDto>>
+    internal sealed class SearchUbicacionesQueryHandler : IRequestHandler<SearchUbicacionesQuery, Result<IReadOnlyList<UbicacionDto>>>
     {
         private readonly IUbicacionRepository _repository;
 
@@ -13,7 +14,7 @@ namespace Inventario.Application.Queries.Ubicaciones.Search
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<IReadOnlyList<UbicacionDto>> Handle(SearchUbicacionesQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IReadOnlyList<UbicacionDto>>> Handle(SearchUbicacionesQuery request, CancellationToken cancellationToken)
         {
             // Obtener todas las ubicaciones y filtrar por término si se proporciona
             var ubicaciones = await _repository.GetAllAsync(cancellationToken);
@@ -25,7 +26,7 @@ namespace Inventario.Application.Queries.Ubicaciones.Search
                 .ToList()
                 .AsReadOnly();
 
-            return filtered;
+            return Result<IReadOnlyList<UbicacionDto>>.Success(filtered);
         }
     }
 }

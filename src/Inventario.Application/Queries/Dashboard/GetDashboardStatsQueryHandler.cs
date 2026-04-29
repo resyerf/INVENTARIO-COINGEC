@@ -1,10 +1,11 @@
+using Inventario.Application.Common.Models;
 using Inventario.Application.DTOs;
 using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace Inventario.Application.Queries.Dashboard
 {
-    internal sealed class GetDashboardStatsQueryHandler : IRequestHandler<GetDashboardStatsQuery, DashboardStatsDto>
+    internal sealed class GetDashboardStatsQueryHandler : IRequestHandler<GetDashboardStatsQuery, Result<DashboardStatsDto>>
     {
         private readonly IActivoRepository _activoRepository;
         private readonly IAsignacionRepository _asignacionRepository;
@@ -29,7 +30,7 @@ namespace Inventario.Application.Queries.Dashboard
             _usuarioRepository = usuarioRepository ?? throw new ArgumentNullException(nameof(usuarioRepository));
         }
 
-        public async Task<DashboardStatsDto> Handle(GetDashboardStatsQuery request, CancellationToken cancellationToken)
+        public async Task<Result<DashboardStatsDto>> Handle(GetDashboardStatsQuery request, CancellationToken cancellationToken)
         {
             // Obtener conteos de manera secuencial usando COUNT en la BD (mucho más eficiente)
             var totalUsuarios = await _usuarioRepository.CountAsync(cancellationToken);
@@ -41,7 +42,7 @@ namespace Inventario.Application.Queries.Dashboard
 
             var activosNoAsignados = totalActivos - activosAsignados;
 
-            return new DashboardStatsDto(
+            return Result<DashboardStatsDto>.Success(new DashboardStatsDto(
                 TotalUsuarios: totalUsuarios,
                 TotalActivos: totalActivos,
                 ActivosAsignados: activosAsignados,
@@ -49,7 +50,7 @@ namespace Inventario.Application.Queries.Dashboard
                 TotalUbicaciones: totalUbicaciones,
                 TotalCategorias: totalCategorias,
                 TotalSubcategorias: totalSubcategorias
-            );
+            ));
         }
     }
 }

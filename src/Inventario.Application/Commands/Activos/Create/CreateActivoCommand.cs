@@ -1,4 +1,5 @@
-﻿using MediatR;
+using Inventario.Application.Common.Models;
+using MediatR;
 
 namespace Inventario.Application.Commands.Activos.Create
 {
@@ -17,5 +18,5 @@ namespace Inventario.Application.Commands.Activos.Create
         Guid? UbicacionId,
         DateTime? FechaAdquisicion,
         Guid? UsuarioId // Opcional, por si se asigna al crear
-    ) : IRequest<Guid>; // Retorna el ID del nuevo Activo
+    ) : IRequest<Result<Guid>>; // Retorna el ID del nuevo Activo
 }

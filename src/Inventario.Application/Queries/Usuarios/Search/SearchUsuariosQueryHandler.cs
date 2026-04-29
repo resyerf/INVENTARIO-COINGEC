@@ -1,10 +1,11 @@
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Application.Queries.Usuarios.GetList;
 using MediatR;
+using Inventario.Application.Common.Models;
 
 namespace Inventario.Application.Queries.Usuarios.Search
 {
-    internal sealed class SearchUsuariosQueryHandler : IRequestHandler<SearchUsuariosQuery, IReadOnlyList<UsuarioDto>>
+    internal sealed class SearchUsuariosQueryHandler : IRequestHandler<SearchUsuariosQuery, Result<IReadOnlyList<UsuarioDto>>>
     {
         private readonly IUsuarioRepository _repository;
 
@@ -13,13 +14,13 @@ namespace Inventario.Application.Queries.Usuarios.Search
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
 
-        public async Task<IReadOnlyList<UsuarioDto>> Handle(SearchUsuariosQuery request, CancellationToken cancellationToken)
+        public async Task<Result<IReadOnlyList<UsuarioDto>>> Handle(SearchUsuariosQuery request, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrWhiteSpace(request.Termino)) return new List<UsuarioDto>().AsReadOnly();
+            if (string.IsNullOrWhiteSpace(request.Termino)) return Result<IReadOnlyList<UsuarioDto>>.Success(new List<UsuarioDto>().AsReadOnly());
 
             var usuarios = await _repository.GetBySearchTermAsync(request.Termino, cancellationToken);
             string Format(string? value, string defaultValue) => string.IsNullOrWhiteSpace(value) ? defaultValue : value;
-            return usuarios
+            return Inventario.Application.Common.Models.Result<IReadOnlyList<UsuarioDto>>.Success(usuarios
                 .Select(u => new UsuarioDto(
                     u.Id,
                     Format(u.DocumentoIdentidad, "SIN DOCUMENTO"),
@@ -30,7 +31,7 @@ namespace Inventario.Application.Queries.Usuarios.Search
                     Format(u.Sede, "SIN SEDE"),
                     u.IsActive))
                 .ToList()
-                .AsReadOnly();
+                .AsReadOnly());
         }
     }
 }

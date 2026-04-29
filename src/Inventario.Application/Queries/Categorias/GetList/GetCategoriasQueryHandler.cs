@@ -2,17 +2,18 @@ using Inventario.Application.Common.Pagination;
 using Inventario.Application.DTOs;
 using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
+using Inventario.Application.Common.Models;
 
 namespace Inventario.Application.Queries.Categorias.GetList
 {
-    internal sealed class GetCategoriasQueryHandler : IRequestHandler<GetCategoriasQuery, PagedResult<CategoriaDto>>
+    internal sealed class GetCategoriasQueryHandler : IRequestHandler<GetCategoriasQuery, Result<PagedResult<CategoriaDto>>>
     {
         private readonly ICategoriaRepository _categoriaRepository;
         public GetCategoriasQueryHandler(ICategoriaRepository categoriaRepository)
         {
             _categoriaRepository = categoriaRepository ?? throw new ArgumentNullException(nameof(categoriaRepository));
         }
-        public async Task<PagedResult<CategoriaDto>> Handle(GetCategoriasQuery request, CancellationToken cancellationToken)
+        public async Task<Result<PagedResult<CategoriaDto>>> Handle(GetCategoriasQuery request, CancellationToken cancellationToken)
         {
             var (items, totalCount) = await _categoriaRepository.GetPagedCategoriasAsync(
                 request.Page, 
@@ -29,7 +30,7 @@ namespace Inventario.Application.Queries.Categorias.GetList
                 u.Ubicacion?.Descripcion ?? "Sin descripcion",
                 u.IsActive)).ToList().AsReadOnly();
 
-            return new PagedResult<CategoriaDto>(dtos, totalCount, request.Page, request.PageSize);
+            return Result<PagedResult<CategoriaDto>>.Success(new PagedResult<CategoriaDto>(dtos, totalCount, request.Page, request.PageSize));
         }
     }
 }

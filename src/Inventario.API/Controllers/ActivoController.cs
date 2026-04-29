@@ -19,8 +19,7 @@ namespace Inventario.API.Controllers
             // El validador de FluentValidation se ejecuta automáticamente antes de entrar aquí 
             // si tienes configurado el ValidationBehavior en MediatR.
             var result = await Mediator.Send(command, cancellationToken);
-
-            return Ok(result);
+            return HandleResult(result);
         }
 
         [HttpPut("{id:guid}")]
@@ -28,7 +27,7 @@ namespace Inventario.API.Controllers
         {
             if (id != command.Id) return BadRequest();
             var result = await Mediator.Send(command, cancellationToken);
-            return Ok(result);
+            return HandleResult(result);
         }
 
         [HttpGet]
@@ -45,14 +44,14 @@ namespace Inventario.API.Controllers
         {
             var query = new GetActivosQuery(page, pageSize, searchTerm, condicion, isActive, categoria, custodio);
             var result = await Mediator.Send(query, ct);
-            return Ok(result);
+            return HandleResult(result);
         }
 
         [HttpGet("reporte")]
         public async Task<IActionResult> GetReporte(CancellationToken ct)
         {
             var result = await Mediator.Send(new GetActivosReporteQuery(), ct);
-            return Ok(result);
+            return HandleResult(result);
         }
 
         [HttpGet("search")]
@@ -60,26 +59,31 @@ namespace Inventario.API.Controllers
         public async Task<IActionResult> Search([FromQuery] string termino, CancellationToken cancellationToken)
         {
             var result = await Mediator.Send(new SearchActivosQuery(termino), cancellationToken);
-            return Ok(result);
+            return HandleResult(result);
         }
 
         [HttpGet("export")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ExportToExcel(CancellationToken ct)
         {
-            var resultBytes = await Mediator.Send(new ExportActivosQuery(), ct);
+            var result = await Mediator.Send(new ExportActivosQuery(), ct);
+
+            if (!result.IsSuccess || result.Value == null)
+            {
+                return BadRequest(new { error = result.ErrorMessage });
+            }
 
             string contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
             string fileName = $"Activos_{DateTime.Now:yyyyMMdd}.xlsx";
 
-            return File(resultBytes, contentType, fileName);
+            return File(result.Value, contentType, fileName);
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            await Mediator.Send(new DeleteActivoCommand(id), cancellationToken);
-            return NoContent();
+            var result = await Mediator.Send(new DeleteActivoCommand(id), cancellationToken);
+            return HandleResult(result);
         }
 
         [HttpPost("import")]

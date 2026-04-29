@@ -1,4 +1,6 @@
-﻿using MediatR;
+using MediatR;
+
+using Inventario.Application.Common.Models;
 
 namespace Inventario.Application.Commands.Categorias.Create
 {
@@ -6,5 +8,5 @@ namespace Inventario.Application.Commands.Categorias.Create
     string Codigo,
     string Descripcion,
     string Valores,
-    Guid UbicacionId) : IRequest<Guid>;
+    Guid UbicacionId) : IRequest<Result<Guid>>;
 }

@@ -1,11 +1,12 @@
-﻿using Inventario.Domain.Entities;
+using Inventario.Application.Common.Models;
+using Inventario.Domain.Entities;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
 using MediatR;
 
 namespace Inventario.Application.Commands.SubCategorias.Create
 {
-    internal sealed class CreateSubCategoriaCommandHandler : IRequestHandler<CreateSubCategoriaCommand, Guid>
+    internal sealed class CreateSubCategoriaCommandHandler : IRequestHandler<CreateSubCategoriaCommand, Result<Guid>>
     {
         private readonly ICategoriaRepository _categoriaRepository;
         private readonly ISubCategoryRepository _subCategoryRepository;
@@ -18,13 +19,13 @@ namespace Inventario.Application.Commands.SubCategorias.Create
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task<Guid> Handle(CreateSubCategoriaCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(CreateSubCategoriaCommand request, CancellationToken cancellationToken)
         {
             var category = await _categoriaRepository.GetByIdAsync(request.categoriaId);
 
             if (category is null)
             {
-                throw new Exception($"El código {request.categoriaId} no existe");
+                return Result<Guid>.Failure($"El código {request.categoriaId} no existe");
             }
             var categoria = SubCategoria.Create(
                 request.nombre,
@@ -36,7 +37,7 @@ namespace Inventario.Application.Commands.SubCategorias.Create
             // 3. Persistencia
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-            return categoria.Id;
+            return Result<Guid>.Success(categoria.Id);
         }
     }
 }

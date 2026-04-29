@@ -1,3 +1,4 @@
+using Inventario.Application.Common.Models;
 using Inventario.Application.DTOs;
 using Inventario.Application.Interfaces.Services;
 using Inventario.Domain.Interfaces.Repositories;
@@ -5,7 +6,7 @@ using MediatR;
 
 namespace Inventario.Application.Queries.Activos.Export
 {
-    internal sealed class ExportActivosQueryHandler : IRequestHandler<ExportActivosQuery, byte[]>
+    internal sealed class ExportActivosQueryHandler : IRequestHandler<ExportActivosQuery, Result<byte[]>>
     {
         private readonly IActivoRepository _activoRepository;
         private readonly IExcelExportService _excelExportService;
@@ -16,7 +17,7 @@ namespace Inventario.Application.Queries.Activos.Export
             _excelExportService = excelExportService;
         }
 
-        public async Task<byte[]> Handle(ExportActivosQuery request, CancellationToken cancellationToken)
+        public async Task<Result<byte[]>> Handle(ExportActivosQuery request, CancellationToken cancellationToken)
         {
             var activos = await _activoRepository.GetAllForReportAsync(cancellationToken);
 
@@ -55,7 +56,7 @@ namespace Inventario.Application.Queries.Activos.Export
                 { "Fecha Adquisición", x => x.FechaAdquisicion }
             };
 
-            return _excelExportService.Export(reportData, "Activos", columns);
+            return Result<byte[]>.Success(_excelExportService.Export(reportData, "Activos", columns));
         }
     }
 }
