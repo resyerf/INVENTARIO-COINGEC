@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Entities;
+using Inventario.Domain.Entities;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Domain.Primitives;
 using MediatR;
@@ -25,12 +25,20 @@ namespace Inventario.Application.Commands.Asignaciones.Asignar
             if (activo == null)
                 throw new Exception("El activo no existe.");
 
+            // Validar que el activo no esté ya asignado
+            if (activo.UsuarioId.HasValue)
+            {
+                throw new Exception($"El activo seleccionado ya se encuentra asignado actualmente.");
+            }
+
             // 2. Lógica de Dominio: Crear la asignación
             // Nota: Idealmente, el Activo debería tener un método .Asignar(usuarioId, estado)
             var asignacion = Asignacion.Create(
-                activo.Id,
+                request.ActivoId,
                 request.UsuarioId,
-                request.EstadoEntrega
+                request.FechaAsignacion,
+                activo.Estado ?? "Sin informacion",
+                request.Observaciones ?? "Sin observaciones"
             );
 
             // 3. Actualizar el estado del Activo (Quién lo tiene ahora)

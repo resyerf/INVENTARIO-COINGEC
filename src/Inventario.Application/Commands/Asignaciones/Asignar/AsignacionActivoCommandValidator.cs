@@ -17,8 +17,8 @@ namespace Inventario.Application.Commands.Asignaciones.Asignar
                 .MustAsync(async (id, cancel) => await usuarioRepo.GetByIdAsync(id) != null)
                 .WithMessage("El usuario (custodio) no existe.");
 
-            RuleFor(x => x.EstadoEntrega)
-                .NotEmpty().WithMessage("Debes indicar en qué estado entregas el equipo.");
+            RuleFor(x => x.FechaAsignacion)
+                .NotEmpty().WithMessage("Necesita indicar la fecha de asignación del activo");
             
             RuleFor(x => x.ActivoId)
                 .MustAsync(async (id, cancellation) =>

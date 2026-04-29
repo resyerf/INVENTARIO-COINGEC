@@ -26,20 +26,21 @@ namespace Inventario.Domain.Entities
         // Constructor privado para forzar el uso de Create
         private Asignacion() { }
 
-        private Asignacion(Guid id, Guid activoId, Guid usuarioId, string estadoEntrega) : base(id)
+        private Asignacion(Guid id, Guid activoId, Guid usuarioId, DateTime fechaAsignacion, string estadoEntrega, string observaciones) : base(id)
         {
             ActivoId = activoId;
             UsuarioId = usuarioId;
-            FechaAsignacion = DateTime.UtcNow;
+            FechaAsignacion = fechaAsignacion;
             EstadoEntrega = estadoEntrega?.ToUpperInvariant() ?? string.Empty;
+            Observaciones = observaciones ?? "Sin observaciones adicionales";
             IsActive = true;
         }
 
         // Factory Method: Este es el que usarás en el Activo.RegistrarNuevaAsignacion
-        public static Asignacion Create(Guid activoId, Guid usuarioId, string estadoEntrega)
+        public static Asignacion Create(Guid activoId, Guid usuarioId, DateTime fechaAsignacion, string estadoEntrega, string observaciones)
         {
             // Aquí podrías agregar validaciones de dominio si fueran necesarias
-            return new Asignacion(Guid.NewGuid(), activoId, usuarioId, estadoEntrega);
+            return new Asignacion(Guid.NewGuid(), activoId, usuarioId, fechaAsignacion, estadoEntrega, observaciones);
         }
 
         public void FinalizarAsignacion(string estadoRecibido, string? observaciones)
