@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Entities;
+using Inventario.Domain.Entities;
 using Inventario.Domain.Primitives;
 
 namespace Inventario.Domain.Interfaces.Repositories
@@ -10,5 +10,6 @@ namespace Inventario.Domain.Interfaces.Repositories
         Task<IReadOnlyList<Categoria>> SearchByTermAsync(string termino, CancellationToken cancellationToken);
         Task<IReadOnlyList<Categoria>> SearchByListCodeAsync(List<string> codes, CancellationToken cancellationToken);
         Task<IReadOnlyList<Categoria>> GetByListCodeAsync(List<string> codeCategoria, CancellationToken cancellationToken);
+        Task<(IReadOnlyList<Categoria> Items, int TotalCount)> GetPagedCategoriasAsync(int pageNumber, int pageSize, string? searchTerm, CancellationToken cancellationToken);
     }
 }

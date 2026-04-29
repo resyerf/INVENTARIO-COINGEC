@@ -1,23 +1,29 @@
+using Inventario.Application.Common.Pagination;
 using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace Inventario.Application.Queries.Usuarios.GetList
 {
-    internal sealed class GetUsuarioQueryHandler : IRequestHandler<GetUsuariosQuery, IReadOnlyList<UsuarioDto>>
+    internal sealed class GetUsuarioQueryHandler : IRequestHandler<GetUsuariosQuery, PagedResult<UsuarioDto>>
     {
-        private readonly IUsuarioRepository _repository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public GetUsuarioQueryHandler(IUsuarioRepository repository)
+        public GetUsuarioQueryHandler(IUsuarioRepository usuarioRepository)
         {
-            _repository = repository;
-        }   
-        public async Task<IReadOnlyList<UsuarioDto>> Handle(GetUsuariosQuery request, CancellationToken cancellationToken)
+            _usuarioRepository = usuarioRepository ?? throw new ArgumentNullException(nameof(usuarioRepository));
+        }
+
+        public async Task<PagedResult<UsuarioDto>> Handle(GetUsuariosQuery request, CancellationToken cancellationToken)
         {
-            var usuarios = await _repository.GetAllAsync(cancellationToken);
+            var (items, totalCount) = await _usuarioRepository.GetPagedUsuariosAsync(
+                request.Page, 
+                request.PageSize, 
+                request.SearchTerm, 
+                cancellationToken);
 
             string Format(string? value, string defaultValue) => string.IsNullOrWhiteSpace(value) ? defaultValue : value;
 
-            return usuarios.Select(u => new UsuarioDto(
+            var dtos = items.Select(u => new UsuarioDto(
                 u.Id,
                 Format(u.DocumentoIdentidad, "SIN DOCUMENTO"),
                 u.NombreCompleto,
@@ -26,6 +32,8 @@ namespace Inventario.Application.Queries.Usuarios.GetList
                 Format(u.Cargo, "SIN CARGO"),
                 Format(u.Sede, "SIN SEDE"),
                 u.IsActive)).ToList().AsReadOnly();
+
+            return new PagedResult<UsuarioDto>(dtos, totalCount, request.Page, request.PageSize);
         }
     }
 }

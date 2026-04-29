@@ -30,5 +30,34 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                 .Where(a => a.FechaDevolucion == null)
                 .CountAsync(cancellationToken);
         }
+
+        public async Task<(IReadOnlyList<Asignacion> Items, int TotalCount)> GetPagedAsignacionesAsync(int pageNumber, int pageSize, string? searchTerm, CancellationToken cancellationToken)
+        {
+            var query = DbContext.Asignaciones
+                .AsNoTracking()
+                .Include(a => a.Activo)
+                .Include(a => a.Usuario)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var search = searchTerm.ToLower();
+                query = query.Where(a => 
+                    (a.Activo != null && a.Activo.NombreEquipo.ToLower().Contains(search)) ||
+                    (a.Activo != null && a.Activo.Serie != null && a.Activo.Serie.ToLower().Contains(search)) ||
+                    (a.Usuario != null && a.Usuario.NombreCompleto.ToLower().Contains(search))
+                );
+            }
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderByDescending(a => a.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return (items, totalCount);
+        }
     }
 }

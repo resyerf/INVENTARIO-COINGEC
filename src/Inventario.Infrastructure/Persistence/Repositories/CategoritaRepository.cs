@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Entities;
+using Inventario.Domain.Entities;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +57,33 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                 .AsNoTracking()
                 .Where(s => codes.Contains(s.Codigo.ToUpper()))
                 .ToListAsync(cancellationToken);
+        }
+
+        public async Task<(IReadOnlyList<Categoria> Items, int TotalCount)> GetPagedCategoriasAsync(int pageNumber, int pageSize, string? searchTerm, CancellationToken cancellationToken)
+        {
+            var query = DbContext.Categorias
+                .AsNoTracking()
+                .Include(c => c.Ubicacion)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var search = searchTerm.ToLower();
+                query = query.Where(c => 
+                    c.Codigo.ToLower().Contains(search) || 
+                    c.Descripcion.ToLower().Contains(search) || 
+                    (c.Valores != null && c.Valores.ToLower().Contains(search)));
+            }
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderByDescending(c => c.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return (items, totalCount);
         }
     }
 }

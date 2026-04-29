@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Entities;
+using Inventario.Domain.Entities;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -59,9 +59,34 @@ public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
 
     public async Task<IReadOnlyList<Usuario>> GetByDocumentNbrListAsync(List<string> documents, CancellationToken cancellationToken = default)
     {
-        return await DbContext.Usuarios
-            .AsNoTracking()
-            .Where(u => !string.IsNullOrEmpty(u.DocumentoIdentidad) && documents.Contains(u.DocumentoIdentidad))
-            .ToListAsync(cancellationToken);
+            return await DbContext.Usuarios
+                .AsNoTracking()
+                .Where(u => !string.IsNullOrEmpty(u.DocumentoIdentidad) && documents.Contains(u.DocumentoIdentidad))
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<(IReadOnlyList<Usuario> Items, int TotalCount)> GetPagedUsuariosAsync(int pageNumber, int pageSize, string? searchTerm, CancellationToken cancellationToken)
+        {
+            var query = DbContext.Usuarios.AsNoTracking().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var search = searchTerm.ToLower();
+                query = query.Where(u => 
+                    u.NombreCompleto.ToLower().Contains(search) || 
+                    u.Email.ToLower().Contains(search) ||
+                    (u.DocumentoIdentidad != null && u.DocumentoIdentidad.ToLower().Contains(search))
+                );
+            }
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderByDescending(u => u.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return (items, totalCount);
+        }
     }
-}

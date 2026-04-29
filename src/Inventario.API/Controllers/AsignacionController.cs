@@ -12,10 +12,14 @@ namespace Inventario.API.Controllers
     public class AsignacionController : BaseApiController
     {
         [HttpGet]
-        [ProducesResponseType(typeof(IReadOnlyList<AsignacionDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(Inventario.Application.Common.Pagination.PagedResult<AsignacionDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? searchTerm = null,
+            CancellationToken cancellationToken = default)
         {
-            var result = await Mediator.Send(new GetAsignacionesQuery(), cancellationToken);
+            var result = await Mediator.Send(new GetAsignacionesQuery(page, pageSize, searchTerm), cancellationToken);
             return Ok(result);
         }
 

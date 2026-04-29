@@ -1,10 +1,11 @@
+using Inventario.Application.Common.Pagination;
 using Inventario.Application.DTOs;
 using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace Inventario.Application.Queries.Asignaciones.GetList
 {
-    internal sealed class GetAsignacionesQueryHandler : IRequestHandler<GetAsignacionesQuery, IReadOnlyList<AsignacionDto>>
+    internal sealed class GetAsignacionesQueryHandler : IRequestHandler<GetAsignacionesQuery, PagedResult<AsignacionDto>>
     {
         private readonly IAsignacionRepository _asignacionRepository;
 
@@ -13,11 +14,15 @@ namespace Inventario.Application.Queries.Asignaciones.GetList
             _asignacionRepository = asignacionRepository ?? throw new ArgumentNullException(nameof(asignacionRepository));
         }
 
-        public async Task<IReadOnlyList<AsignacionDto>> Handle(GetAsignacionesQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResult<AsignacionDto>> Handle(GetAsignacionesQuery request, CancellationToken cancellationToken)
         {
-            var asignaciones = await _asignacionRepository.GetAllWithIncludesAsync(cancellationToken);
+            var (items, totalCount) = await _asignacionRepository.GetPagedAsignacionesAsync(
+                request.Page, 
+                request.PageSize, 
+                request.SearchTerm, 
+                cancellationToken);
             
-            return asignaciones.Select(a => new AsignacionDto(
+            var dtos = items.Select(a => new AsignacionDto(
                 a.Id,
                 a.Activo?.NombreEquipo ?? "Desconocido",
                 a.Activo?.Serie ?? "Sin Serie",
@@ -29,6 +34,8 @@ namespace Inventario.Application.Queries.Asignaciones.GetList
                 a.Observaciones,
                 a.IsActive
             )).ToList().AsReadOnly();
+
+            return new PagedResult<AsignacionDto>(dtos, totalCount, request.Page, request.PageSize);
         }
     }
 }

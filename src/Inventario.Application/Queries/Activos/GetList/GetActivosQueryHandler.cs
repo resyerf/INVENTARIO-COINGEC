@@ -1,10 +1,11 @@
+using Inventario.Application.Common.Pagination;
 using Inventario.Application.DTOs;
 using Inventario.Domain.Interfaces.Repositories;
 using MediatR;
 
 namespace Inventario.Application.Queries.Activos.GetList
 {
-    internal sealed class GetActivosQueryHandler : IRequestHandler<GetActivosQuery, IReadOnlyList<ActivoDto>>
+    internal sealed class GetActivosQueryHandler : IRequestHandler<GetActivosQuery, PagedResult<ActivoDto>>
     {
         private readonly IActivoRepository _activoRepository;
 
@@ -13,11 +14,19 @@ namespace Inventario.Application.Queries.Activos.GetList
             _activoRepository = activoRepository ?? throw new ArgumentNullException(nameof(activoRepository));
         }
 
-        public async Task<IReadOnlyList<ActivoDto>> Handle(GetActivosQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResult<ActivoDto>> Handle(GetActivosQuery request, CancellationToken cancellationToken)
         {
-            var activos = await _activoRepository.GetAllForReportAsync(cancellationToken);
+            var (items, totalCount) = await _activoRepository.GetPagedActivosAsync(
+                request.Page,
+                request.PageSize,
+                request.SearchTerm,
+                request.Condicion,
+                request.IsActive,
+                request.Categoria,
+                request.Custodio,
+                cancellationToken);
             
-            return activos.Select(a => new ActivoDto(
+            var dtos = items.Select(a => new ActivoDto(
                 a.Id,
                 a.NombreEquipo,
                 a.CodigoEquipo,
@@ -35,6 +44,8 @@ namespace Inventario.Application.Queries.Activos.GetList
                 a.FechaAdquisicion,
                 a.IsActive
             )).ToList().AsReadOnly();
+
+            return new PagedResult<ActivoDto>(dtos, totalCount, request.Page, request.PageSize);
         }
     }
 }

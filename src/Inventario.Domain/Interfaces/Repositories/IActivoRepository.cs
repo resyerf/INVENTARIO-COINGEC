@@ -16,6 +16,18 @@ public interface IActivoRepository : IRepository<Activo>
     Task<List<Activo>> GetActivosAsignadosAUsuarioAsync(Guid usuarioId, CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<Activo>> GetAllForReportAsync(CancellationToken ct);
+    
+    // Pagination and Filtering
+    Task<(IReadOnlyList<Activo> Items, int TotalCount)> GetPagedActivosAsync(
+        int pageNumber, 
+        int pageSize, 
+        string? searchTerm, 
+        string? condicion, 
+        bool? isActive, 
+        string? categoria, 
+        string? custodio, 
+        CancellationToken cancellationToken = default);
+
     Task<IReadOnlyList<Activo>> GetBySearchTermAsync(string termino, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Activo>> GetExistingCodesAsync(List<string> codigosEquipo, CancellationToken cancellationToken = default);
 }

@@ -32,10 +32,19 @@ namespace Inventario.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IReadOnlyList<ActivoDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAll(CancellationToken ct)
+        [ProducesResponseType(typeof(Inventario.Application.Common.Pagination.PagedResult<ActivoDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? searchTerm = null,
+            [FromQuery] string? condicion = null,
+            [FromQuery] bool? isActive = null,
+            [FromQuery] string? categoria = null,
+            [FromQuery] string? custodio = null,
+            CancellationToken ct = default)
         {
-            var result = await Mediator.Send(new GetActivosQuery(), ct);
+            var query = new GetActivosQuery(page, pageSize, searchTerm, condicion, isActive, categoria, custodio);
+            var result = await Mediator.Send(query, ct);
             return Ok(result);
         }
 

@@ -14,5 +14,6 @@ namespace Inventario.Domain.Interfaces.Repositories
         Task<Usuario?> GetByEmailAsync(string email, CancellationToken cancellation = default);
         Task<IReadOnlyList<Usuario>> GetBySearchTermAsync(string termino, CancellationToken cancellationToken = default);
         Task<IReadOnlyList<Usuario>> GetByDocumentNbrListAsync(List<string> dcuments, CancellationToken cancellationToken = default);
+        Task<(IReadOnlyList<Usuario> Items, int TotalCount)> GetPagedUsuariosAsync(int pageNumber, int pageSize, string? searchTerm, CancellationToken cancellationToken);
     }
 }

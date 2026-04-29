@@ -1,4 +1,4 @@
-﻿using Inventario.Domain.Entities;
+using Inventario.Domain.Entities;
 using Inventario.Domain.Interfaces.Repositories;
 using Inventario.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
@@ -87,6 +87,72 @@ namespace Inventario.Infrastructure.Persistence.Repositories
                         .AsNoTracking()
                         .Where(u => u.CodigoEquipo != null && codigosEquipo.Contains(u.CodigoEquipo))
                         .ToListAsync(cancellationToken);
+        }
+
+        public async Task<(IReadOnlyList<Activo> Items, int TotalCount)> GetPagedActivosAsync(
+            int pageNumber, 
+            int pageSize, 
+            string? searchTerm, 
+            string? condicion, 
+            bool? isActive, 
+            string? categoria, 
+            string? custodio, 
+            CancellationToken cancellationToken = default)
+        {
+            var query = DbContext.Activos
+                .AsNoTracking()
+                .Include(a => a.Categoria)
+                .Include(a => a.Usuario)
+                .Include(a => a.Ubicacion)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var search = searchTerm.ToLower();
+                query = query.Where(a => 
+                    a.NombreEquipo.ToLower().Contains(search) || 
+                    (a.Observaciones != null && a.Observaciones.ToLower().Contains(search)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(condicion))
+            {
+                var cond = condicion.ToLower();
+                query = query.Where(a => a.Estado != null && a.Estado.ToLower().Contains(cond));
+            }
+
+            if (isActive.HasValue)
+            {
+                query = query.Where(a => a.IsActive == isActive.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(categoria))
+            {
+                var cat = categoria.ToLower();
+                query = query.Where(a => a.Categoria != null && (
+                    a.Categoria.Codigo.ToLower().Contains(cat) ||
+                    a.Categoria.Descripcion.ToLower().Contains(cat) ||
+                    (a.Categoria.Valores != null && a.Categoria.Valores.ToLower().Contains(cat))
+                ));
+            }
+
+            if (!string.IsNullOrWhiteSpace(custodio))
+            {
+                var cust = custodio.ToLower();
+                query = query.Where(a => a.Usuario != null && (
+                    a.Usuario.NombreCompleto.ToLower().Contains(cust) ||
+                    a.Usuario.Email.ToLower().Contains(cust)
+                ));
+            }
+
+            var totalCount = await query.CountAsync(cancellationToken);
+
+            var items = await query
+                .OrderByDescending(a => a.Id) // Basic ordering, might change later
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return (items, totalCount);
         }
     }
 }

@@ -28,13 +28,14 @@ namespace Inventario.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IReadOnlyList<UsuarioDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        [ProducesResponseType(typeof(Inventario.Application.Common.Pagination.PagedResult<UsuarioDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? searchTerm = null,
+            CancellationToken cancellationToken = default)
         {
-            // Enviamos el Query al Mediator
-            var result = await Mediator.Send(new GetUsuariosQuery(), cancellationToken);
-
-            // Retornamos la lista mapeada a UsuarioDto
+            var result = await Mediator.Send(new GetUsuariosQuery(page, pageSize, searchTerm), cancellationToken);
             return Ok(result);
         }
 

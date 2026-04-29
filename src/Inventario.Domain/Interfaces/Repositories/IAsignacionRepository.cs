@@ -11,5 +11,7 @@ namespace Inventario.Domain.Interfaces.Repositories
         /// Obtiene el conteo de asignaciones activas (sin devolución)
         /// </summary>
         Task<int> CountActivosAsignadosAsync(CancellationToken cancellationToken = default);
+        
+        Task<(IReadOnlyList<Asignacion> Items, int TotalCount)> GetPagedAsignacionesAsync(int pageNumber, int pageSize, string? searchTerm, CancellationToken cancellationToken);
     }
 }
