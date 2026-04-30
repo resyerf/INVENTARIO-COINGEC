@@ -1,6 +1,7 @@
 using Inventario.Application.Commands.Categorias.Create;
 using Inventario.Application.Commands.Categorias.Delete;
 using Inventario.Application.Commands.Categorias.Update;
+using Inventario.Application.Common.Pagination;
 using Inventario.Application.DTOs;
 using Inventario.Application.Queries.Categorias.GetList;
 using Inventario.Application.Queries.Categorias.Search;
@@ -28,7 +29,7 @@ namespace Inventario.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Inventario.Application.Common.Pagination.PagedResult<CategoriaDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<CategoriaDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,

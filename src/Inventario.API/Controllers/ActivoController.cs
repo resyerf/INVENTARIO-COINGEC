@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Inventario.Application.Queries.Activos.Export;
 using Inventario.Application.Commands.Activos.Import;
 using Inventario.Application.Commands.Activos.Update;
+using Inventario.Application.Common.Pagination;
 
 namespace Inventario.API.Controllers
 {
@@ -31,7 +32,7 @@ namespace Inventario.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Inventario.Application.Common.Pagination.PagedResult<ActivoDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<ActivoDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,

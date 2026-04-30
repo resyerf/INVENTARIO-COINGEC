@@ -5,6 +5,7 @@ using Inventario.Application.Commands.Asignaciones.FinalizarAsignacion;
 using Inventario.Application.Queries.Asignaciones.GetList;
 using Inventario.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Inventario.Application.Common.Pagination;
 
 namespace Inventario.API.Controllers
 {
@@ -12,7 +13,7 @@ namespace Inventario.API.Controllers
     public class AsignacionController : BaseApiController
     {
         [HttpGet]
-        [ProducesResponseType(typeof(Inventario.Application.Common.Pagination.PagedResult<AsignacionDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<AsignacionDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,

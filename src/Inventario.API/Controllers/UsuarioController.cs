@@ -2,6 +2,7 @@ using Inventario.Application.Commands.Usuarios.Create;
 using Inventario.Application.Commands.Usuarios.Delete;
 using Inventario.Application.Commands.Usuarios.Import;
 using Inventario.Application.Commands.Usuarios.Update;
+using Inventario.Application.Common.Pagination;
 using Inventario.Application.Queries.Usuarios.GetList;
 using Inventario.Application.Queries.Usuarios.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace Inventario.API.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(Inventario.Application.Common.Pagination.PagedResult<UsuarioDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PagedResult<UsuarioDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll(
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 10,
