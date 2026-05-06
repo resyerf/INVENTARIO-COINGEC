@@ -4,6 +4,7 @@ using Inventario.Domain.Primitives;
 using Inventario.Infrastructure.Persistence.Context;
 using Inventario.Infrastructure.Persistence.Repositories;
 using Inventario.Infrastructure.Services;
+using Inventario.Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,6 +56,10 @@ namespace Inventario.Infrastructure
         {
             services.AddTransient<IExcelExportService, ExcelExportService>();
             services.AddTransient<IExcelImportService, ExcelImportService>();
+            
+            services.AddSingleton<IPasswordHasher, PasswordHasher>();
+            services.AddSingleton<ITokenProvider, TokenProvider>();
+            
             return services;
         }
     }

@@ -29,6 +29,7 @@ namespace Inventario.Infrastructure.Persistence.Context
         public DbSet<CompraInsumo> ComprasInsumos => Set<CompraInsumo>();
         public DbSet<SolicitudInsumo> SolicitudesInsumos => Set<SolicitudInsumo>();
         public DbSet<MovimientoInsumo> MovimientosInsumos => Set<MovimientoInsumo>();
+        public DbSet<AuthUser> AuthUsers => Set<AuthUser>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,5 +1,6 @@
-﻿using Inventario.Infrastructure.Persistence.Context;
+using Inventario.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
+using Inventario.Infrastructure.Persistence;
 
 namespace Inventario.API.Extensions
 {
@@ -10,6 +11,9 @@ namespace Inventario.API.Extensions
             using var scope = app.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<InventarioDbContext>();
             dbContext.Database.Migrate();
+            
+            // Seed Auth
+            DbInitializer.SeedAuthAsync(app.Services).Wait();
         }   
     }
 }

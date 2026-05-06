@@ -24,6 +24,10 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Inventario API v1.0.0");
 });
 app.UseCors("AllowAngularApp");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 app.ApplyMigrations();
 
